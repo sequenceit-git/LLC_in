@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Env (never commit real credentials)
+backend/.env
+frontend/.env
+frontend/.env.local
+*.env.local
+
+# Builds / runtime
+backend/logs/
+frontend/dist/
+*.log
+.DS_Store
+Thumbs.db
+
+# PM2 / OS
+.pm2/
+.vscode/
+.idea/
