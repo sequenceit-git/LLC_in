@@ -1,48 +1,89 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useParams } from 'react-router-dom';
 import { api } from '../api';
 import { fmt, FALLBACK_POLICIES, FAQS } from '../data/seed';
 
-const TABS = ['orders', 'pricing', 'articles', 'statements', 'faqs'];
+const NAV = [
+  { id: 'orders', label: 'Orders', icon: '▤' },
+  { id: 'pricing', label: 'County Pricing', icon: '$' },
+  { id: 'articles', label: 'Articles', icon: '✎' },
+  { id: 'statements', label: 'Statements', icon: '§' },
+  { id: 'faqs', label: 'FAQs', icon: '?' },
+];
+
+const TAB_IDS = NAV.map((n) => n.id);
 
 export default function AdminPage() {
-  const [tab, setTab] = useState('orders');
+  const { tab: tabParam } = useParams();
+  const isValidTab = TAB_IDS.includes(tabParam);
+  const tab = isValidTab ? tabParam : 'orders';
+
   const [stats, setStats] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     api.stats().then(setStats).catch(() => setStats(null));
   }, [tab]);
 
+  useEffect(() => {
+    setMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [tab]);
+
+  const current = NAV.find((n) => n.id === tab);
+
+  // Unknown admin path -> canonical orders route
+  if (!isValidTab) return <Navigate to="/admin/orders" replace />;
+
   return (
     <div className="admin-wrap">
-      <div className="admin-top">
-        <div className="container">
-          <div>
-            <Link to="/" style={{ fontFamily: 'var(--display)', fontSize: 20 }}>
-              ← LLC Publication <span style={{ color: 'var(--gold)' }}>Admin</span>
+      <aside className={`admin-sidebar ${menuOpen ? 'open' : ''}`}>
+        <Link to="/" className="admin-brand">
+          <span className="admin-brand-mark">L</span>
+          <span className="admin-brand-text">
+            <span className="admin-brand-name">LLC Publication</span>
+            <span className="admin-brand-tag">Admin Console</span>
+          </span>
+        </Link>
+        <nav className="admin-nav">
+          <div className="admin-nav-label">Manage</div>
+          {NAV.map((n) => (
+            <Link
+              key={n.id}
+              to={`/admin/${n.id}`}
+              className={tab === n.id ? 'active' : ''}
+              onClick={() => setMenuOpen(false)}
+            >
+              <span className="admin-nav-icon" aria-hidden="true">{n.icon}</span>
+              {n.label}
             </Link>
-            <div style={{ fontFamily: 'var(--sans)', fontSize: 12, opacity: 0.7 }}>
-              No-auth mode (add auth middleware before public launch)
-            </div>
-          </div>
-          <nav>
-            {TABS.map((t) => (
-              <Link
-                key={t}
-                to={`?tab=${t}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setTab(t);
-                }}
-                className={tab === t ? 'active' : ''}
-              >
-                {t}
-              </Link>
-            ))}
-          </nav>
+          ))}
+        </nav>
+        <div className="admin-sidebar-foot">
+          <Link to="/" className="admin-side-link">← View live site</Link>
+          <div className="admin-auth-note">No-auth mode · add auth before launch</div>
         </div>
-      </div>
-      <div className="container admin-body">
+      </aside>
+
+      {menuOpen && <div className="admin-backdrop" onClick={() => setMenuOpen(false)} />}
+
+      <main className="admin-main">
+        <div className="admin-topbar">
+          <button
+            type="button"
+            className="admin-menu-btn"
+            onClick={() => setMenuOpen((v) => !v)}
+            aria-label="Toggle admin navigation"
+            aria-expanded={menuOpen}
+          >
+            {menuOpen ? '✕' : '☰'}
+          </button>
+          <div>
+            <h1 className="admin-page-title">{current?.label || 'Dashboard'}</h1>
+            <div className="admin-page-sub">Admin console · LLC Publication Online</div>
+          </div>
+        </div>
+
         {stats && (
           <div className="stat-grid">
             <div className="stat">
@@ -63,12 +104,13 @@ export default function AdminPage() {
             </div>
           </div>
         )}
+
         {tab === 'orders' && <OrdersPanel />}
         {tab === 'pricing' && <PricingPanel />}
         {tab === 'articles' && <ArticlesPanel />}
         {tab === 'statements' && <StatementsPanel />}
         {tab === 'faqs' && <FaqsPanel />}
-      </div>
+      </main>
     </div>
   );
 }

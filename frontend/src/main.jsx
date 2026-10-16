@@ -24,7 +24,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <Route path="/sitemap" element={<PolicyPage slug="sitemap" />} />
         <Route path="/policy/:slug" element={<PolicyPage />} />
 
-        <Route path="/admin" element={<AdminPage />} />
+        <Route path="/admin" element={<Navigate to="/admin/orders" replace />} />
+        <Route path="/admin/:tab" element={<AdminPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
