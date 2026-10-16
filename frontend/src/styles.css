@@ -106,8 +106,9 @@ input,select,button{font-family:inherit;font-size:100%}
 @media (min-width:768px){.compare{padding:100px 0}}
 .compare .display{font-size:32px}
 @media (min-width:768px){.compare .display{font-size:44px}}
-.compare-table{font-family:var(--sans);border:1px solid var(--rule);max-width:1100px;margin:0 auto}
+.compare-table{font-family:var(--sans);border:1px solid rgba(11,31,58,.22);max-width:1100px;margin:0 auto}
 .compare-row{display:grid;grid-template-columns:2fr 1.2fr 1.2fr;font-size:13px}
+.compare-row+.compare-row{border-top:1px solid var(--rule)}
 @media (min-width:600px){.compare-row{font-size:14px}}
 .compare-row>*{padding:14px 12px}
 @media (min-width:600px){.compare-row>*{padding:18px 24px}}
@@ -439,7 +440,95 @@ table.admin-table { width: 100%; border-collapse: collapse; font-family: var(--s
 .admin-table tbody tr:hover { background: rgba(250,247,241,.7); }
 .admin-table code { font-size: 12px; background: var(--paper); border: 1px solid var(--rule); padding: 2px 6px; }
 
-.row-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+/* Triple-dot row action menu (fixed-position popover, never clipped by table scroll) */
+.row-menu { position: relative; display: inline-block; }
+.row-menu-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; padding: 0;
+  border: 1px solid var(--rule); background: #fff; color: var(--navy);
+  font-size: 18px; line-height: 1; cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.row-menu-btn:hover, .row-menu-btn[aria-expanded="true"] {
+  background: var(--navy); color: #fff; border-color: var(--navy);
+}
+.row-menu-pop {
+  position: fixed; z-index: 120;
+  background: #fff; border: 1px solid var(--rule);
+  box-shadow: 0 16px 36px rgba(11, 31, 58, .18);
+  padding: 6px; display: flex; flex-direction: column; gap: 4px;
+}
+.row-menu-item {
+  display: block; width: 100%; text-align: left;
+  padding: 9px 10px; border: 0; background: transparent; color: var(--navy);
+  font-family: var(--sans); font-size: 12.5px; font-weight: 600;
+  text-decoration: none; cursor: pointer;
+}
+.row-menu-item:hover { background: var(--paper); }
+.row-menu-item.danger { color: #b42318; }
+.row-menu-item.danger:hover { background: #fce8e6; }
+.row-menu-sep { height: 1px; background: var(--rule); margin: 4px 0; }
+.row-menu-field {
+  display: flex; flex-direction: column; gap: 4px; padding: 6px 10px;
+  font-family: var(--sans); font-size: 10px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase; color: var(--ink-60);
+}
+.row-menu-field select {
+  width: 100%; padding: 8px 9px; border: 1px solid var(--rule); background: var(--paper);
+  font-family: var(--sans); font-size: 12.5px; color: var(--ink);
+}
+
+/* Comparison section editor */
+.compare-editor { border: 1px solid var(--rule); }
+.compare-editor-head,
+.compare-editor-row {
+  display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 10px; align-items: center;
+  padding: 10px 12px;
+}
+.compare-editor-head {
+  background: rgba(244, 236, 216, .45);
+  font-family: var(--sans); font-size: 10.5px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase; color: var(--ink-60);
+}
+.compare-editor-row { border-top: 1px solid var(--rule); }
+.compare-editor-row input {
+  width: 100%; padding: 9px 11px; border: 1px solid var(--rule); background: var(--paper);
+  font-family: var(--sans); font-size: 13px; color: var(--ink);
+}
+.compare-editor-tools { display: flex; gap: 4px; }
+.compare-editor-tools .small-btn { padding: 8px 10px; }
+@media (max-width: 700px) {
+  .compare-editor-head { display: none; }
+  .compare-editor-row { grid-template-columns: 1fr; }
+}
+
+/* Comparison live preview (reuses the real home-page classes) */
+.compare-preview { margin-top: 18px; }
+.compare-preview-bar {
+  display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+  padding: 10px 14px; background: var(--navy-dark);
+}
+.compare-preview-title {
+  font-family: var(--sans); font-size: 10.5px; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold);
+}
+.compare-preview-hint { font-family: var(--sans); font-size: 11.5px; color: rgba(250,247,241,.6); }
+.compare.compare-preview-stage {
+  padding: 34px 20px; border: 1px solid var(--rule); border-top: 0;
+}
+.compare-preview-empty {
+  font-family: var(--sans); font-size: 12px; font-style: italic;
+  color: var(--ink-60); opacity: .7; font-weight: 400;
+}
+.compare-us-cell .compare-preview-empty { color: var(--navy); opacity: .5; }
+/* Pin the preview while editing. Guarded to >900px because the panel becomes a
+   horizontal scroll container below that, which would break position: sticky. */
+@media (min-width: 901px) {
+  .compare-preview {
+    position: sticky; top: 0; z-index: 6;
+    max-height: 72vh; overflow-y: auto; background: #fff;
+  }
+}
 
 /* Status badges */
 .badge {

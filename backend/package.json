@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
-    "seed": "node src/seed.js"
+    "seed": "node src/seed.js",
+    "seed:orders": "node src/seedOrders.js",
+    "seed:orders:clear": "node src/seedOrders.js --clear"
   },
   "dependencies": {
     "cors": "^2.8.5",

@@ -1,13 +1,15 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import { api } from '../api';
-import { fmt, FALLBACK_POLICIES, FAQS } from '../data/seed';
+import { fmt, FALLBACK_POLICIES, FALLBACK_COMPARISON, FAQS } from '../data/seed';
+import RowMenu from '../components/RowMenu';
 
 const NAV = [
   { id: 'orders', label: 'Orders', icon: '▤' },
   { id: 'pricing', label: 'County Pricing', icon: '$' },
   { id: 'articles', label: 'Articles', icon: '✎' },
   { id: 'statements', label: 'Statements', icon: '§' },
+  { id: 'comparison', label: 'Comparison', icon: '⇄' },
   { id: 'faqs', label: 'FAQs', icon: '?' },
 ];
 
@@ -109,6 +111,7 @@ export default function AdminPage() {
         {tab === 'pricing' && <PricingPanel />}
         {tab === 'articles' && <ArticlesPanel />}
         {tab === 'statements' && <StatementsPanel />}
+        {tab === 'comparison' && <ComparisonPanel />}
         {tab === 'faqs' && <FaqsPanel />}
       </main>
     </div>
@@ -200,31 +203,37 @@ function OrdersPanel() {
                   <span className={`badge ${o.status}`}>{o.status}</span>
                 </td>
                 <td>
-                  <div className="row-actions">
-                    <select
-                      value={o.status}
-                      onChange={(e) => patch(o._id, { status: e.target.value })}
-                      className="small-btn"
-                    >
-                      {['new', 'processing', 'publishing', 'filed', 'completed', 'cancelled'].map((s) => (
-                        <option key={s} value={s}>
-                          {s}
-                        </option>
-                      ))}
-                    </select>
-                    <select
-                      value={o.paymentStatus}
-                      onChange={(e) => patch(o._id, { paymentStatus: e.target.value })}
-                      className="small-btn"
-                    >
-                      {['pending', 'paid', 'failed', 'refunded'].map((s) => (
-                        <option key={s} value={s}>
-                          {s}
-                        </option>
-                      ))}
-                    </select>
+                  <RowMenu label={`Actions for ${o.llcName}`}>
+                    <div className="row-menu-field">
+                      <span>Order status</span>
+                      <select
+                        value={o.status}
+                        onChange={(e) => patch(o._id, { status: e.target.value })}
+                      >
+                        {['new', 'processing', 'publishing', 'filed', 'completed', 'cancelled'].map((s) => (
+                          <option key={s} value={s}>
+                            {s}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="row-menu-field">
+                      <span>Payment</span>
+                      <select
+                        value={o.paymentStatus}
+                        onChange={(e) => patch(o._id, { paymentStatus: e.target.value })}
+                      >
+                        {['pending', 'paid', 'failed', 'refunded'].map((s) => (
+                          <option key={s} value={s}>
+                            {s}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="row-menu-sep" />
                     <button
-                      className="small-btn danger"
+                      type="button"
+                      className="row-menu-item danger"
                       onClick={async () => {
                         if (confirm('Delete order?')) {
                           await api.deleteOrder(o._id);
@@ -232,9 +241,9 @@ function OrdersPanel() {
                         }
                       }}
                     >
-                      Delete
+                      Delete order
                     </button>
-                  </div>
+                  </RowMenu>
                 </td>
               </tr>
             ))}
@@ -424,20 +433,22 @@ function ArticlesPanel() {
                 </td>
                 <td>{new Date(a.updatedAt).toLocaleDateString()}</td>
                 <td>
-                  <div className="row-actions">
-                    <button className="small-btn" onClick={() => startEdit(a)}>
-                      Edit
+                  <RowMenu label={`Actions for ${a.title}`}>
+                    <button type="button" className="row-menu-item" onClick={() => startEdit(a)}>
+                      Edit article
                     </button>
                     <a
-                      className="small-btn"
+                      className="row-menu-item"
                       href={`/resources/${a.slug}`}
                       target="_blank"
                       rel="noreferrer"
                     >
-                      View
+                      View live
                     </a>
+                    <div className="row-menu-sep" />
                     <button
-                      className="small-btn danger"
+                      type="button"
+                      className="row-menu-item danger"
                       onClick={async () => {
                         if (confirm('Delete article?')) {
                           await api.deleteArticle(a._id);
@@ -445,9 +456,9 @@ function ArticlesPanel() {
                         }
                       }}
                     >
-                      Delete
+                      Delete article
                     </button>
-                  </div>
+                  </RowMenu>
                 </td>
               </tr>
             ))}
@@ -618,14 +629,14 @@ function StatementsPanel() {
                   <span className="badge new">{p.category || 'legal'}</span>
                 </td>
                 <td>
-                  <div className="row-actions">
-                    <button className="small-btn" onClick={() => startEdit(p)}>
-                      Edit &amp; Save
+                  <RowMenu label={`Actions for ${p.title}`}>
+                    <button type="button" className="row-menu-item" onClick={() => startEdit(p)}>
+                      Edit &amp; save
                     </button>
-                    <a className="small-btn" href={`/${p.slug}`} target="_blank" rel="noreferrer">
-                      View Live
+                    <a className="row-menu-item" href={`/${p.slug}`} target="_blank" rel="noreferrer">
+                      View live
                     </a>
-                  </div>
+                  </RowMenu>
                 </td>
               </tr>
             ))}
@@ -757,6 +768,25 @@ function FaqsPanel() {
     }
   };
 
+  const update = async (f, patch) => {
+    if (!f._id) {
+      setItems(items.map((x) => (x.q === f.q ? { ...x, ...patch } : x)));
+      return;
+    }
+    try {
+      await api.updateFaq(f._id, {
+        q: f.q,
+        a: f.a,
+        order: f.order ?? 0,
+        isActive: f.isActive ?? true,
+        ...patch,
+      });
+      load();
+    } catch (err) {
+      setMsg(`Error updating FAQ: ${err.message}`);
+    }
+  };
+
   return (
     <>
       <div className="panel">
@@ -814,14 +844,22 @@ function FaqsPanel() {
                   </span>
                 </td>
                 <td>
-                  <div className="row-actions">
-                    <button className="small-btn" onClick={() => startEdit(f)}>
-                      Edit
+                  <RowMenu label={`Actions for ${f.q}`}>
+                    <button type="button" className="row-menu-item" onClick={() => startEdit(f)}>
+                      Edit FAQ
                     </button>
-                    <button className="small-btn danger" onClick={() => remove(f)}>
-                      Delete
+                    <button
+                      type="button"
+                      className="row-menu-item"
+                      onClick={() => update(f, { isActive: f.isActive === false })}
+                    >
+                      {f.isActive !== false ? 'Hide from site' : 'Show on site'}
                     </button>
-                  </div>
+                    <div className="row-menu-sep" />
+                    <button type="button" className="row-menu-item danger" onClick={() => remove(f)}>
+                      Delete FAQ
+                    </button>
+                  </RowMenu>
                 </td>
               </tr>
             ))}
@@ -890,5 +928,303 @@ function FaqsPanel() {
         </div>
       )}
     </>
+  );
+}
+
+function ComparisonPanel() {
+  const [form, setForm] = useState(FALLBACK_COMPARISON);
+  const [loaded, setLoaded] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState('');
+  const [error, setError] = useState('');
+
+  const apply = (item) => {
+    if (!item) return;
+    setForm({
+      eyebrow: item.eyebrow ?? '',
+      heading: item.heading ?? '',
+      headingAccent: item.headingAccent ?? '',
+      columns: item.columns?.length ? item.columns : FALLBACK_COMPARISON.columns,
+      rows: (item.rows || []).map((r) => ({ label: r.label || '', us: r.us || '', them: r.them || '' })),
+      ctaLabel: item.ctaLabel ?? '',
+      ctaHref: item.ctaHref ?? '',
+    });
+  };
+
+  const load = () =>
+    api
+      .comparison()
+      .then((item) => apply(item))
+      .catch((err) => setError(err.message || 'Could not load'))
+      .finally(() => setLoaded(true));
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
+
+  const setColumn = (i, v) =>
+    setForm((f) => {
+      const columns = [...(f.columns || [])];
+      columns[i] = v;
+      return { ...f, columns };
+    });
+
+  const setRow = (i, k, v) =>
+    setForm((f) => ({
+      ...f,
+      rows: f.rows.map((r, idx) => (idx === i ? { ...r, [k]: v } : r)),
+    }));
+
+  const addRow = () =>
+    setForm((f) => ({ ...f, rows: [...f.rows, { label: '', us: '', them: '' }] }));
+
+  const removeRow = (i) =>
+    setForm((f) => ({ ...f, rows: f.rows.filter((_, idx) => idx !== i) }));
+
+  const moveRow = (i, dir) =>
+    setForm((f) => {
+      const rows = [...f.rows];
+      const j = i + dir;
+      if (j < 0 || j >= rows.length) return f;
+      [rows[i], rows[j]] = [rows[j], rows[i]];
+      return { ...f, rows };
+    });
+
+  const save = async (e) => {
+    e.preventDefault();
+    setBusy(true);
+    setMsg('');
+    setError('');
+    try {
+      const payload = {
+        ...form,
+        rows: form.rows.filter((r) => r.label.trim().length > 0),
+      };
+      const res = await api.updateComparison(payload);
+      apply(res.item);
+      setMsg('✓ Comparison section saved — live on the home page.');
+    } catch (err) {
+      setError(`Error saving: ${err.message}`);
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const reset = async () => {
+    if (!confirm('Restore the shipped default comparison content?')) return;
+    try {
+      const res = await api.resetComparison();
+      apply(res.item);
+      setMsg('✓ Restored defaults.');
+      setError('');
+    } catch (err) {
+      setError(`Error: ${err.message}`);
+    }
+  };
+
+  if (!loaded) {
+    return (
+      <div className="panel">
+        <h3>Comparison section</h3>
+        <p style={{ fontFamily: 'var(--sans)', fontSize: 13, color: '#666' }}>Loading…</p>
+      </div>
+    );
+  }
+
+  const cols = form.columns || ['', '', ''];
+  const previewRows = form.rows.filter((r) => `${r.label}${r.us}${r.them}`.trim().length > 0);
+
+  return (
+    <div className="panel">
+      <h3>Home page · “The Comparison” section</h3>
+      <p style={{ fontFamily: 'var(--sans)', fontSize: 13, color: '#666', marginTop: 4 }}>
+        Edit the comparison table shown on the home page. Column 2 is your highlighted column, column 3 is
+        the competitors. The preview below updates live as you type.
+      </p>
+
+      {/* Live preview — uses the exact markup and classes of the home page section */}
+      <div className="compare-preview">
+        <div className="compare-preview-bar">
+          <span className="compare-preview-title">Live preview</span>
+          <span className="compare-preview-hint">
+            Exactly how the section renders on the home page — unsaved edits included.
+          </span>
+        </div>
+        <div className="compare compare-preview-stage">
+          <div className="section-head section-head-center">
+            <div className="eyebrow">{form.eyebrow}</div>
+            <h2 className="display navy">
+              {form.heading} <span className="italic">{form.headingAccent}</span>
+            </h2>
+          </div>
+          <div className="compare-table" role="table">
+            <div className="compare-row compare-head" role="row">
+              {cols.map((c, i) => (
+                <div key={i} className={i === 1 ? 'compare-us' : ''} role="columnheader">
+                  {c}
+                </div>
+              ))}
+            </div>
+            {previewRows.map((r, i) => (
+              <div className="compare-row" role="row" key={i}>
+                <div>{r.label || <em className="compare-preview-empty">row label</em>}</div>
+                <div className="compare-us-cell">
+                  {r.us || <em className="compare-preview-empty">your value</em>}
+                </div>
+                <div>{r.them || <em className="compare-preview-empty">competitor value</em>}</div>
+              </div>
+            ))}
+            {previewRows.length === 0 && (
+              <div className="compare-row" role="row">
+                <div>
+                  <em className="compare-preview-empty">Add a row below to see it here</em>
+                </div>
+                <div className="compare-us-cell" />
+                <div />
+              </div>
+            )}
+          </div>
+          <div className="cta-row">
+            <a
+              href={form.ctaHref || '#order'}
+              className="btn btn-cta-navy"
+              onClick={(e) => e.preventDefault()}
+            >
+              {form.ctaLabel || 'Get Started Now →'}
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <form className="admin-form" onSubmit={save} style={{ marginTop: 16 }}>
+        <div className="two-col">
+          <input
+            placeholder="Eyebrow — e.g. The Comparison"
+            value={form.eyebrow}
+            onChange={(e) => set('eyebrow', e.target.value)}
+          />
+          <input
+            placeholder="CTA link — e.g. #order"
+            value={form.ctaHref}
+            onChange={(e) => set('ctaHref', e.target.value)}
+          />
+        </div>
+
+        <div className="two-col">
+          <input
+            placeholder="Heading — e.g. Lower prices. Faster filings."
+            value={form.heading}
+            onChange={(e) => set('heading', e.target.value)}
+          />
+          <input
+            placeholder="Heading accent (italic) — e.g. No surprises."
+            value={form.headingAccent}
+            onChange={(e) => set('headingAccent', e.target.value)}
+          />
+        </div>
+
+        <div className="two-col">
+          <input
+            placeholder="CTA button label — e.g. Get Started Now →"
+            value={form.ctaLabel}
+            onChange={(e) => set('ctaLabel', e.target.value)}
+          />
+          <input
+            placeholder="Column 1 header (usually blank)"
+            value={cols[0] || ''}
+            onChange={(e) => setColumn(0, e.target.value)}
+          />
+        </div>
+
+        <div className="two-col">
+          <input
+            placeholder="Column 2 header — your brand"
+            value={cols[1] || ''}
+            onChange={(e) => setColumn(1, e.target.value)}
+          />
+          <input
+            placeholder="Column 3 header — competitors"
+            value={cols[2] || ''}
+            onChange={(e) => setColumn(2, e.target.value)}
+          />
+        </div>
+
+        <div className="compare-editor">
+          <div className="compare-editor-head">
+            <span>Row label</span>
+            <span>{cols[1] || 'Ours'}</span>
+            <span>{cols[2] || 'Competitors'}</span>
+            <span />
+          </div>
+          {form.rows.map((r, i) => (
+            <div className="compare-editor-row" key={i}>
+              <input
+                placeholder="Starting price (most counties)"
+                value={r.label}
+                onChange={(e) => setRow(i, 'label', e.target.value)}
+              />
+              <input placeholder="$349" value={r.us} onChange={(e) => setRow(i, 'us', e.target.value)} />
+              <input
+                placeholder="$395–$499"
+                value={r.them}
+                onChange={(e) => setRow(i, 'them', e.target.value)}
+              />
+              <div className="compare-editor-tools">
+                <button
+                  type="button"
+                  className="small-btn"
+                  onClick={() => moveRow(i, -1)}
+                  disabled={i === 0}
+                  aria-label="Move row up"
+                >
+                  ↑
+                </button>
+                <button
+                  type="button"
+                  className="small-btn"
+                  onClick={() => moveRow(i, 1)}
+                  disabled={i === form.rows.length - 1}
+                  aria-label="Move row down"
+                >
+                  ↓
+                </button>
+                <button
+                  type="button"
+                  className="small-btn danger"
+                  onClick={() => removeRow(i)}
+                  aria-label="Remove row"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="toolbar">
+          <button type="button" className="small-btn" onClick={addRow}>
+            + Add row
+          </button>
+          <button className="btn btn-navy" type="submit" disabled={busy}>
+            {busy ? 'Saving…' : 'Save comparison'}
+          </button>
+          <button type="button" className="small-btn" onClick={reset}>
+            Restore defaults
+          </button>
+          {msg && (
+            <span style={{ fontFamily: 'var(--sans)', fontSize: 13, color: '#137333', fontWeight: 600 }}>
+              {msg}
+            </span>
+          )}
+          {error && (
+            <span style={{ fontFamily: 'var(--sans)', fontSize: 13, color: '#c5221f', fontWeight: 600 }}>
+              {error}
+            </span>
+          )}
+        </div>
+      </form>
+    </div>
   );
 }

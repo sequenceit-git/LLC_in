@@ -62,6 +62,23 @@ export const FAQS = [
   { q: 'What do I receive when it’s done?', a: 'You receive (1) copies of both newspaper Affidavits of Publication, (2) the filed Certificate of Publication with the NY DOS receipt stamp, and (3) tearsheets of the published notices — delivered as a digital packet.' },
 ];
 
+export const FALLBACK_COMPARISON = {
+  eyebrow: 'The Comparison',
+  heading: 'Lower prices. Faster filings.',
+  headingAccent: 'No surprises.',
+  columns: ['', 'LLC Publication Online', 'Other Competitors'],
+  rows: [
+    { label: 'Starting price (most counties)', us: '$349', them: '$395–$499' },
+    { label: 'Expedite fee', us: 'None', them: '+$75–$99' },
+    { label: 'Newspapers arranged for you', us: 'Yes', them: 'Yes' },
+    { label: 'Certificate of Publication filed', us: 'Yes', them: 'Sometimes / add-on' },
+    { label: 'Publication starts', us: 'Same week', them: '1–3 weeks' },
+    { label: 'Lowest-price guarantee', us: 'Yes', them: 'No' },
+  ],
+  ctaLabel: 'Get Started Now →',
+  ctaHref: '#order',
+};
+
 export const fmt = (n) => '$' + Number(n || 0).toLocaleString('en-US');
 
 export { INITIAL_POLICIES as FALLBACK_POLICIES } from './initialPoliciesData.js';

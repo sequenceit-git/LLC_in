@@ -5,16 +5,20 @@ import Footer from '../components/Footer';
 import PricingGrid from '../components/PricingGrid';
 import OrderForm from '../components/OrderForm';
 import { api } from '../api';
-import { FALLBACK_PRICES, FAQS } from '../data/seed';
+import { FALLBACK_PRICES, FALLBACK_COMPARISON, FAQS } from '../data/seed';
 
 export default function HomePage() {
   const [prices, setPrices] = useState(FALLBACK_PRICES);
   const [faqs, setFaqs] = useState(FAQS);
+  const [comparison, setComparison] = useState(FALLBACK_COMPARISON);
 
   useEffect(() => {
     api.prices().then(setPrices).catch(() => {});
     api.faqs().then((items) => {
       if (items && items.length) setFaqs(items);
+    }).catch(() => {});
+    api.comparison().then((item) => {
+      if (item) setComparison(item);
     }).catch(() => {});
   }, []);
 
@@ -151,48 +155,31 @@ export default function HomePage() {
       <section className="compare">
         <div className="container">
           <div className="section-head section-head-center">
-            <div className="eyebrow">The Comparison</div>
-            <h2 className="display navy">Lower prices. Faster filings. <span className="italic">No surprises.</span></h2>
+            <div className="eyebrow">{comparison.eyebrow}</div>
+            <h2 className="display navy">
+              {comparison.heading} <span className="italic">{comparison.headingAccent}</span>
+            </h2>
           </div>
           <div className="compare-table" role="table">
             <div className="compare-row compare-head" role="row">
-              <div role="columnheader"></div>
-              <div className="compare-us" role="columnheader">LLC Publication Online</div>
-              <div role="columnheader">Other Competitors</div>
+              {(comparison.columns || []).map((c, i) => (
+                <div key={i} className={i === 1 ? 'compare-us' : ''} role="columnheader">
+                  {c}
+                </div>
+              ))}
             </div>
-            <div className="compare-row" role="row">
-              <div>Starting price (most counties)</div>
-              <div className="compare-us-cell">$349</div>
-              <div>$395–$499</div>
-            </div>
-            <div className="compare-row" role="row">
-              <div>Expedite fee</div>
-              <div className="compare-us-cell">None</div>
-              <div>+$75–$99</div>
-            </div>
-            <div className="compare-row" role="row">
-              <div>Newspapers arranged for you</div>
-              <div className="compare-us-cell">Yes</div>
-              <div>Yes</div>
-            </div>
-            <div className="compare-row" role="row">
-              <div>Certificate of Publication filed</div>
-              <div className="compare-us-cell">Yes</div>
-              <div>Sometimes / add-on</div>
-            </div>
-            <div className="compare-row" role="row">
-              <div>Publication starts</div>
-              <div className="compare-us-cell">Same week</div>
-              <div>1–3 weeks</div>
-            </div>
-            <div className="compare-row" role="row">
-              <div>Lowest-price guarantee</div>
-              <div className="compare-us-cell">Yes</div>
-              <div>No</div>
-            </div>
+            {(comparison.rows || []).map((r, i) => (
+              <div className="compare-row" role="row" key={i}>
+                <div>{r.label}</div>
+                <div className="compare-us-cell">{r.us}</div>
+                <div>{r.them}</div>
+              </div>
+            ))}
           </div>
           <div className="cta-row">
-            <a href="#order" className="btn btn-cta-navy">Get Started Now →</a>
+            <a href={comparison.ctaHref || '#order'} className="btn btn-cta-navy">
+              {comparison.ctaLabel || 'Get Started Now →'}
+            </a>
           </div>
         </div>
       </section>

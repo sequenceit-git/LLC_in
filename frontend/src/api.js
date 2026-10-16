@@ -38,4 +38,7 @@ export const api = {
   updateFaq: (id, body) => req(`/api/faqs/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
   deleteFaq: (id) => req(`/api/faqs/${id}`, { method: 'DELETE' }),
   stats: () => req('/api/admin/stats'),
+  comparison: () => req('/api/comparison').then((d) => d.item),
+  updateComparison: (body) => req('/api/comparison', { method: 'PUT', body: JSON.stringify(body) }),
+  resetComparison: () => req('/api/comparison/reset', { method: 'POST' }),
 };

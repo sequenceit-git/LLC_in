@@ -11,6 +11,7 @@ const articlesRouter = require('./routes/articles');
 const adminRouter = require('./routes/admin');
 const policiesRouter = require('./routes/policies');
 const faqsRouter = require('./routes/faqs');
+const comparisonRouter = require('./routes/comparison');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -35,6 +36,7 @@ app.get('/', (req, res) =>
       '/api/articles',
       '/api/policies',
       '/api/faqs',
+      '/api/comparison',
       '/api/admin/stats',
     ],
   })
@@ -45,6 +47,7 @@ app.use('/api/prices', pricesRouter);
 app.use('/api/articles', articlesRouter);
 app.use('/api/policies', policiesRouter);
 app.use('/api/faqs', faqsRouter);
+app.use('/api/comparison', comparisonRouter);
 app.use('/api/admin', adminRouter);
 
 app.use(notFound);

@@ -2,7 +2,9 @@ const CountyPrice = require('./models/CountyPrice');
 const Article = require('./models/Article');
 const Policy = require('./models/Policy');
 const Faq = require('./models/Faq');
+const Comparison = require('./models/Comparison');
 const { INITIAL_POLICIES } = require('./data/initialPolicies');
+const { DEFAULT_COMPARISON } = require('./data/initialComparison');
 
 // 1:1 county pricing extracted from the live site (flat all-inclusive fees)
 const COUNTIES = [
@@ -101,10 +103,15 @@ async function seed() {
   for (const f of FAQS) {
     await Faq.updateOne({ q: f.q }, { $set: f }, { upsert: true });
   }
-  console.log(`Seeded ${COUNTIES.length} counties + ${ARTICLES.length} articles + ${INITIAL_POLICIES.length} policies + ${FAQS.length} FAQs`);
+  await Comparison.updateOne(
+    { key: 'home-comparison' },
+    { $set: DEFAULT_COMPARISON, $setOnInsert: { key: 'home-comparison' } },
+    { upsert: true }
+  );
+  console.log(`Seeded ${COUNTIES.length} counties + ${ARTICLES.length} articles + ${INITIAL_POLICIES.length} policies + ${FAQS.length} FAQs + 1 comparison block`);
 }
 
-module.exports = { seed, COUNTIES, ARTICLES, INITIAL_POLICIES, FAQS };
+module.exports = { seed, COUNTIES, ARTICLES, INITIAL_POLICIES, FAQS, DEFAULT_COMPARISON };
 
 if (require.main === module) {
   require('dotenv').config();
