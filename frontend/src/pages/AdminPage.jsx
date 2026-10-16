@@ -1,9 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api';
-import { fmt } from '../data/seed';
+import { fmt, FALLBACK_POLICIES, FAQS } from '../data/seed';
 
-const TABS = ['orders', 'pricing', 'articles'];
+const TABS = ['orders', 'pricing', 'articles', 'statements', 'faqs'];
 
 export default function AdminPage() {
   const [tab, setTab] = useState('orders');
@@ -18,26 +18,56 @@ export default function AdminPage() {
       <div className="admin-top">
         <div className="container">
           <div>
-            <Link to="/" style={{ fontFamily: 'var(--display)', fontSize: 20 }}>← LLC Publication <span style={{ color: 'var(--gold)' }}>Admin</span></Link>
-            <div style={{ fontFamily: 'var(--sans)', fontSize: 12, opacity: 0.7 }}>No-auth mode (add auth middleware before public launch)</div>
+            <Link to="/" style={{ fontFamily: 'var(--display)', fontSize: 20 }}>
+              ← LLC Publication <span style={{ color: 'var(--gold)' }}>Admin</span>
+            </Link>
+            <div style={{ fontFamily: 'var(--sans)', fontSize: 12, opacity: 0.7 }}>
+              No-auth mode (add auth middleware before public launch)
+            </div>
           </div>
           <nav>
-            {TABS.map((t) => <Link key={t} to={`?tab=${t}`} onClick={(e) => { e.preventDefault(); setTab(t); }} className={tab === t ? 'active' : ''}>{t}</Link>)}
+            {TABS.map((t) => (
+              <Link
+                key={t}
+                to={`?tab=${t}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setTab(t);
+                }}
+                className={tab === t ? 'active' : ''}
+              >
+                {t}
+              </Link>
+            ))}
           </nav>
         </div>
       </div>
       <div className="container admin-body">
         {stats && (
           <div className="stat-grid">
-            <div className="stat"><div className="stat-num">{stats.totalOrders}</div><div className="stat-label">Total orders</div></div>
-            <div className="stat"><div className="stat-num">{stats.newOrders}</div><div className="stat-label">New (unprocessed)</div></div>
-            <div className="stat"><div className="stat-num">{fmt(stats.pipelineRevenue)}</div><div className="stat-label">Pipeline revenue</div></div>
-            <div className="stat"><div className="stat-num">{stats.publishedArticles}</div><div className="stat-label">Published articles · {stats.counties} counties live</div></div>
+            <div className="stat">
+              <div className="stat-num">{stats.totalOrders}</div>
+              <div className="stat-label">Total orders</div>
+            </div>
+            <div className="stat">
+              <div className="stat-num">{stats.newOrders}</div>
+              <div className="stat-label">New (unprocessed)</div>
+            </div>
+            <div className="stat">
+              <div className="stat-num">{fmt(stats.pipelineRevenue)}</div>
+              <div className="stat-label">Pipeline revenue</div>
+            </div>
+            <div className="stat">
+              <div className="stat-num">{stats.publishedArticles}</div>
+              <div className="stat-label">Published articles · {stats.counties} counties live</div>
+            </div>
           </div>
         )}
         {tab === 'orders' && <OrdersPanel />}
         {tab === 'pricing' && <PricingPanel />}
         {tab === 'articles' && <ArticlesPanel />}
+        {tab === 'statements' && <StatementsPanel />}
+        {tab === 'faqs' && <FaqsPanel />}
       </div>
     </div>
   );
@@ -50,43 +80,118 @@ function OrdersPanel() {
   const [page, setPage] = useState(1);
 
   const load = () => api.orders({ q, status, page, limit: 20 }).then(setData).catch(() => {});
-  useEffect(() => { load(); }, [page]);
+  useEffect(() => {
+    load();
+  }, [page]);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { const t = setTimeout(() => { setPage(1); api.orders({ q, status, page: 1, limit: 20 }).then(setData).catch(() => {}); }, 400); return () => clearTimeout(t); }, [q, status]);
+  useEffect(() => {
+    const t = setTimeout(() => {
+      setPage(1);
+      api.orders({ q, status, page: 1, limit: 20 }).then(setData).catch(() => {});
+    }, 400);
+    return () => clearTimeout(t);
+  }, [q, status]);
 
-  const patch = async (id, body) => { await api.patchOrder(id, body); load(); };
+  const patch = async (id, body) => {
+    await api.patchOrder(id, body);
+    load();
+  };
 
   return (
     <div className="panel">
       <h3>Publication orders ({data.total})</h3>
       <div className="toolbar">
-        <input placeholder="Search name, LLC, email, county…" value={q} onChange={(e) => setQ(e.target.value)} style={{ minWidth: 260 }} />
+        <input
+          placeholder="Search name, LLC, email, county…"
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          style={{ minWidth: 260 }}
+        />
         <select value={status} onChange={(e) => setStatus(e.target.value)}>
           <option value="">All statuses</option>
-          {['new', 'processing', 'publishing', 'filed', 'completed', 'cancelled'].map((s) => <option key={s} value={s}>{s}</option>)}
+          {['new', 'processing', 'publishing', 'filed', 'completed', 'cancelled'].map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
         </select>
-        <button className="small-btn" onClick={load}>Refresh</button>
+        <button className="small-btn" onClick={load}>
+          Refresh
+        </button>
       </div>
       <div style={{ overflowX: 'auto' }}>
         <table className="admin-table">
-          <thead><tr><th>Date</th><th>LLC / County</th><th>Contact</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>LLC / County</th>
+              <th>Contact</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
           <tbody>
             {data.items.map((o) => (
               <tr key={o._id}>
                 <td>{new Date(o.createdAt).toLocaleString()}</td>
-                <td><strong>{o.llcName}</strong><br />{o.county} · {o.jurisdictionStatus}<br /><span style={{ color: '#666' }}>{o.discountCode ? `coupon: ${o.discountCode}` : ''}</span></td>
-                <td>{o.firstName} {o.lastName}<br />{o.email}<br />{o.phone}</td>
-                <td><strong>{fmt(o.amount)}</strong><br /><span className={`badge ${o.paymentStatus}`}>{o.paymentStatus}</span></td>
-                <td><span className={`badge ${o.status}`}>{o.status}</span></td>
+                <td>
+                  <strong>{o.llcName}</strong>
+                  <br />
+                  {o.county} · {o.jurisdictionStatus}
+                  <br />
+                  <span style={{ color: '#666' }}>{o.discountCode ? `coupon: ${o.discountCode}` : ''}</span>
+                </td>
+                <td>
+                  {o.firstName} {o.lastName}
+                  <br />
+                  {o.email}
+                  <br />
+                  {o.phone}
+                </td>
+                <td>
+                  <strong>{fmt(o.amount)}</strong>
+                  <br />
+                  <span className={`badge ${o.paymentStatus}`}>{o.paymentStatus}</span>
+                </td>
+                <td>
+                  <span className={`badge ${o.status}`}>{o.status}</span>
+                </td>
                 <td>
                   <div className="row-actions">
-                    <select value={o.status} onChange={(e) => patch(o._id, { status: e.target.value })} className="small-btn">
-                      {['new', 'processing', 'publishing', 'filed', 'completed', 'cancelled'].map((s) => <option key={s} value={s}>{s}</option>)}
+                    <select
+                      value={o.status}
+                      onChange={(e) => patch(o._id, { status: e.target.value })}
+                      className="small-btn"
+                    >
+                      {['new', 'processing', 'publishing', 'filed', 'completed', 'cancelled'].map((s) => (
+                        <option key={s} value={s}>
+                          {s}
+                        </option>
+                      ))}
                     </select>
-                    <select value={o.paymentStatus} onChange={(e) => patch(o._id, { paymentStatus: e.target.value })} className="small-btn">
-                      {['pending', 'paid', 'failed', 'refunded'].map((s) => <option key={s} value={s}>{s}</option>)}
+                    <select
+                      value={o.paymentStatus}
+                      onChange={(e) => patch(o._id, { paymentStatus: e.target.value })}
+                      className="small-btn"
+                    >
+                      {['pending', 'paid', 'failed', 'refunded'].map((s) => (
+                        <option key={s} value={s}>
+                          {s}
+                        </option>
+                      ))}
                     </select>
-                    <button className="small-btn danger" onClick={async () => { if (confirm('Delete order?')) { await api.deleteOrder(o._id); load(); } }}>Delete</button>
+                    <button
+                      className="small-btn danger"
+                      onClick={async () => {
+                        if (confirm('Delete order?')) {
+                          await api.deleteOrder(o._id);
+                          load();
+                        }
+                      }}
+                    >
+                      Delete
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -95,9 +200,15 @@ function OrdersPanel() {
         </table>
       </div>
       <div className="toolbar" style={{ marginTop: 12 }}>
-        <button className="small-btn" disabled={page <= 1} onClick={() => setPage(page - 1)}>← Prev</button>
-        <span style={{ fontFamily: 'var(--sans)', fontSize: 13 }}>Page {data.page} / {data.pages}</span>
-        <button className="small-btn" disabled={page >= data.pages} onClick={() => setPage(page + 1)}>Next →</button>
+        <button className="small-btn" disabled={page <= 1} onClick={() => setPage(page - 1)}>
+          ← Prev
+        </button>
+        <span style={{ fontFamily: 'var(--sans)', fontSize: 13 }}>
+          Page {data.page} / {data.pages}
+        </span>
+        <button className="small-btn" disabled={page >= data.pages} onClick={() => setPage(page + 1)}>
+          Next →
+        </button>
       </div>
     </div>
   );
@@ -109,10 +220,19 @@ function PricingPanel() {
   const [dirty, setDirty] = useState({});
   const [msg, setMsg] = useState('');
 
-  const load = () => api.pricesAll().then(setItems).catch(() => setMsg('API offline — showing nothing. Start backend.'));
-  useEffect(() => { load(); }, []);
+  const load = () =>
+    api
+      .pricesAll()
+      .then(setItems)
+      .catch(() => setMsg('API offline — showing fallback. Start backend.'));
+  useEffect(() => {
+    load();
+  }, []);
 
-  const filtered = useMemo(() => items.filter((p) => p.county.toLowerCase().includes(q.toLowerCase())), [items, q]);
+  const filtered = useMemo(
+    () => items.filter((p) => p.county.toLowerCase().includes(q.toLowerCase())),
+    [items, q]
+  );
 
   const saveOne = async (p) => {
     const price = dirty[p.county] ?? p.price;
@@ -135,8 +255,16 @@ function PricingPanel() {
       <h3>County pricing (all 62 NY counties)</h3>
       <div className="toolbar">
         <input placeholder="Search counties…" value={q} onChange={(e) => setQ(e.target.value)} />
-        <button className="small-btn" onClick={saveAll} disabled={!Object.keys(dirty).length}>Save all edited ({Object.keys(dirty).length})</button>
-        <button className="small-btn" onClick={load}>Refresh</button>
+        <button
+          className="small-btn"
+          onClick={saveAll}
+          disabled={!Object.keys(dirty).length}
+        >
+          Save all edited ({Object.keys(dirty).length})
+        </button>
+        <button className="small-btn" onClick={load}>
+          Refresh
+        </button>
         {msg && <span style={{ fontFamily: 'var(--sans)', fontSize: 13 }}>{msg}</span>}
       </div>
       <div className="price-edit-grid">
@@ -144,8 +272,15 @@ function PricingPanel() {
           <div className="price-cell" key={p.county}>
             <span style={{ flex: 1 }}>{p.county}</span>
             <span>$</span>
-            <input type="number" min="0" value={dirty[p.county] ?? p.price} onChange={(e) => setDirty({ ...dirty, [p.county]: e.target.value })} />
-            <button className="small-btn" onClick={() => saveOne(p)}>Save</button>
+            <input
+              type="number"
+              min="0"
+              value={dirty[p.county] ?? p.price}
+              onChange={(e) => setDirty({ ...dirty, [p.county]: e.target.value })}
+            />
+            <button className="small-btn" onClick={() => saveOne(p)}>
+              Save
+            </button>
           </div>
         ))}
       </div>
@@ -156,13 +291,48 @@ function PricingPanel() {
 function ArticlesPanel() {
   const [items, setItems] = useState([]);
   const [editing, setEditing] = useState(null);
-  const [form, setForm] = useState({ slug: '', title: '', excerpt: '', tag: 'Service', contentHtml: '', readingTime: '8 minutes', status: 'draft', featured: false });
+  const [form, setForm] = useState({
+    slug: '',
+    title: '',
+    excerpt: '',
+    tag: 'Service',
+    contentHtml: '',
+    readingTime: '8 minutes',
+    status: 'draft',
+    featured: false,
+  });
 
   const load = () => api.articles(true).then(setItems).catch(() => {});
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+  }, []);
 
-  const startNew = () => { setEditing('new'); setForm({ slug: '', title: '', excerpt: '', tag: 'Service', contentHtml: '', readingTime: '8 minutes', status: 'draft', featured: false }); };
-  const startEdit = (a) => { setEditing(a._id); setForm({ slug: a.slug, title: a.title, excerpt: a.excerpt, tag: a.tag, contentHtml: a.contentHtml, readingTime: a.readingTime, status: a.status, featured: !!a.featured }); };
+  const startNew = () => {
+    setEditing('new');
+    setForm({
+      slug: '',
+      title: '',
+      excerpt: '',
+      tag: 'Service',
+      contentHtml: '',
+      readingTime: '8 minutes',
+      status: 'draft',
+      featured: false,
+    });
+  };
+  const startEdit = (a) => {
+    setEditing(a._id);
+    setForm({
+      slug: a.slug,
+      title: a.title,
+      excerpt: a.excerpt,
+      tag: a.tag,
+      contentHtml: a.contentHtml,
+      readingTime: a.readingTime,
+      status: a.status,
+      featured: !!a.featured,
+    });
+  };
 
   const save = async (e) => {
     e.preventDefault();
@@ -176,21 +346,67 @@ function ArticlesPanel() {
     <>
       <div className="panel">
         <h3>Articles ({items.length}) — publish management</h3>
-        <div className="toolbar"><button className="small-btn" onClick={startNew}>+ New article</button><button className="small-btn" onClick={load}>Refresh</button></div>
+        <div className="toolbar">
+          <button className="small-btn" onClick={startNew}>
+            + New article
+          </button>
+          <button className="small-btn" onClick={load}>
+            Refresh
+          </button>
+        </div>
         <table className="admin-table">
-          <thead><tr><th>Title</th><th>Slug</th><th>Status</th><th>Updated</th><th>Actions</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Slug</th>
+              <th>Status</th>
+              <th>Updated</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
           <tbody>
             {items.map((a) => (
               <tr key={a._id}>
-                <td><strong>{a.title}</strong><br /><span style={{ color: '#666' }}>{a.tag} · {a.readingTime}</span></td>
-                <td><code>/{a.slug}</code></td>
-                <td><span className={`badge ${a.status}`}>{a.status}</span></td>
+                <td>
+                  <strong>{a.title}</strong>
+                  <br />
+                  <span style={{ color: '#666' }}>
+                    {a.tag} · {a.readingTime}
+                  </span>
+                </td>
+                <td>
+                  <code>/{a.slug}</code>
+                </td>
+                <td>
+                  <span className={`badge ${a.status}`}>{a.status}</span>
+                </td>
                 <td>{new Date(a.updatedAt).toLocaleDateString()}</td>
-                <td><div className="row-actions">
-                  <button className="small-btn" onClick={() => startEdit(a)}>Edit</button>
-                  <a className="small-btn" href={`/resources/${a.slug}`} target="_blank" rel="noreferrer">View</a>
-                  <button className="small-btn danger" onClick={async () => { if (confirm('Delete article?')) { await api.deleteArticle(a._id); load(); } }}>Delete</button>
-                </div></td>
+                <td>
+                  <div className="row-actions">
+                    <button className="small-btn" onClick={() => startEdit(a)}>
+                      Edit
+                    </button>
+                    <a
+                      className="small-btn"
+                      href={`/resources/${a.slug}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      View
+                    </a>
+                    <button
+                      className="small-btn danger"
+                      onClick={async () => {
+                        if (confirm('Delete article?')) {
+                          await api.deleteArticle(a._id);
+                          load();
+                        }
+                      }}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -201,18 +417,433 @@ function ArticlesPanel() {
           <h3>{editing === 'new' ? 'New article' : 'Edit article'}</h3>
           <form className="admin-form" onSubmit={save}>
             <div className="two-col">
-              <input placeholder="slug (e.g. my-guide)" value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-') })} required />
-              <input placeholder="Tag (Service, Compliance, …)" value={form.tag} onChange={(e) => setForm({ ...form, tag: e.target.value })} />
+              <input
+                placeholder="slug (e.g. my-guide)"
+                value={form.slug}
+                onChange={(e) =>
+                  setForm({
+                    ...form,
+                    slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-'),
+                  })
+                }
+                required
+              />
+              <input
+                placeholder="Tag (Service, Compliance, …)"
+                value={form.tag}
+                onChange={(e) => setForm({ ...form, tag: e.target.value })}
+              />
             </div>
-            <input placeholder="Title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />
-            <input placeholder="Excerpt (card subtitle)" value={form.excerpt} onChange={(e) => setForm({ ...form, excerpt: e.target.value })} required />
+            <input
+              placeholder="Title"
+              value={form.title}
+              onChange={(e) => setForm({ ...form, title: e.target.value })}
+              required
+            />
+            <input
+              placeholder="Excerpt (card subtitle)"
+              value={form.excerpt}
+              onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
+              required
+            />
             <div className="two-col">
-              <select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })}><option value="draft">draft</option><option value="published">published</option></select>
-              <input placeholder="Reading time" value={form.readingTime} onChange={(e) => setForm({ ...form, readingTime: e.target.value })} />
+              <select
+                value={form.status}
+                onChange={(e) => setForm({ ...form, status: e.target.value })}
+              >
+                <option value="draft">draft</option>
+                <option value="published">published</option>
+              </select>
+              <input
+                placeholder="Reading time"
+                value={form.readingTime}
+                onChange={(e) => setForm({ ...form, readingTime: e.target.value })}
+              />
             </div>
-            <label style={{ fontFamily: 'var(--sans)', fontSize: 13 }}><input type="checkbox" checked={form.featured} onChange={(e) => setForm({ ...form, featured: e.target.checked })} /> Featured</label>
-            <textarea placeholder="<p>Article HTML…</p>" value={form.contentHtml} onChange={(e) => setForm({ ...form, contentHtml: e.target.value })} required />
-            <div className="toolbar"><button className="btn btn-navy" type="submit">Save &amp; {form.status === 'published' ? 'publish' : 'save draft'}</button><button className="small-btn" type="button" onClick={() => setEditing(null)}>Cancel</button></div>
+            <label style={{ fontFamily: 'var(--sans)', fontSize: 13 }}>
+              <input
+                type="checkbox"
+                checked={form.featured}
+                onChange={(e) => setForm({ ...form, featured: e.target.checked })}
+              />{' '}
+              Featured
+            </label>
+            <textarea
+              placeholder="<p>Article HTML…</p>"
+              value={form.contentHtml}
+              onChange={(e) => setForm({ ...form, contentHtml: e.target.value })}
+              required
+            />
+            <div className="toolbar">
+              <button className="btn btn-navy" type="submit">
+                Save &amp; {form.status === 'published' ? 'publish' : 'save draft'}
+              </button>
+              <button className="small-btn" type="button" onClick={() => setEditing(null)}>
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+    </>
+  );
+}
+
+function StatementsPanel() {
+  const [items, setItems] = useState([]);
+  const [editing, setEditing] = useState(null);
+  const [form, setForm] = useState({ slug: '', title: '', meta: '', contentHtml: '', category: 'legal' });
+  const [msg, setMsg] = useState('');
+
+  const load = () => {
+    api
+      .policies()
+      .then((data) => {
+        if (data && data.length) setItems(data);
+        else setItems(FALLBACK_POLICIES);
+      })
+      .catch(() => setItems(FALLBACK_POLICIES));
+  };
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  const startEdit = (item) => {
+    setEditing(item.slug);
+    setForm({
+      slug: item.slug,
+      title: item.title,
+      meta: item.meta || 'Last updated: May 2026 · LLC Publication Online',
+      contentHtml: item.contentHtml || '',
+      category: item.category || 'legal',
+    });
+    setMsg('');
+  };
+
+  const save = async (e) => {
+    e.preventDefault();
+    try {
+      await api.updatePolicy(form.slug, form);
+      setMsg(`✓ Successfully saved statement: ${form.title}`);
+      setEditing(null);
+      load();
+    } catch (err) {
+      setMsg(`Error saving: ${err.message}`);
+    }
+  };
+
+  return (
+    <>
+      <div className="panel">
+        <h3>Resource Column Statements ({items.length})</h3>
+        <p style={{ fontFamily: 'var(--sans)', fontSize: 13, color: '#666', marginTop: 4 }}>
+          Manage and edit the 5 legal statements and resource pages linked in the footer. Changes persist to MongoDB.
+        </p>
+        <div className="toolbar" style={{ marginTop: 12 }}>
+          <button className="small-btn" onClick={load}>
+            Refresh
+          </button>
+          {msg && (
+            <span style={{ fontFamily: 'var(--sans)', fontSize: 13, color: '#137333', fontWeight: 600 }}>
+              {msg}
+            </span>
+          )}
+        </div>
+        <table className="admin-table">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>URL Path</th>
+              <th>Meta / Updated Date</th>
+              <th>Category</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((p) => (
+              <tr key={p.slug}>
+                <td>
+                  <strong>{p.title}</strong>
+                </td>
+                <td>
+                  <code>/{p.slug}</code>
+                </td>
+                <td>
+                  <span style={{ color: '#666' }}>{p.meta}</span>
+                </td>
+                <td>
+                  <span className="badge new">{p.category || 'legal'}</span>
+                </td>
+                <td>
+                  <div className="row-actions">
+                    <button className="small-btn" onClick={() => startEdit(p)}>
+                      Edit &amp; Save
+                    </button>
+                    <a className="small-btn" href={`/${p.slug}`} target="_blank" rel="noreferrer">
+                      View Live
+                    </a>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {editing && (
+        <div className="panel" style={{ marginTop: 24 }}>
+          <h3>Edit Statement: {form.title}</h3>
+          <form className="admin-form" onSubmit={save} style={{ marginTop: 16 }}>
+            <div className="two-col">
+              <div>
+                <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>
+                  Title
+                </label>
+                <input
+                  value={form.title}
+                  onChange={(e) => setForm({ ...form, title: e.target.value })}
+                  required
+                />
+              </div>
+              <div>
+                <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>
+                  URL Slug (read-only)
+                </label>
+                <input value={`/${form.slug}`} disabled style={{ background: '#eee' }} />
+              </div>
+            </div>
+            <div>
+              <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>
+                Meta Line
+              </label>
+              <input
+                value={form.meta}
+                onChange={(e) => setForm({ ...form, meta: e.target.value })}
+                required
+              />
+            </div>
+            <div>
+              <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>
+                Content HTML (supports &lt;h3&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;li&gt;, &lt;strong&gt;, &lt;a&gt;)
+              </label>
+              <textarea
+                style={{ minHeight: 280, fontFamily: 'monospace', fontSize: 13 }}
+                value={form.contentHtml}
+                onChange={(e) => setForm({ ...form, contentHtml: e.target.value })}
+                required
+              />
+            </div>
+            <div className="toolbar">
+              <button className="btn btn-navy" type="submit">
+                Save Statement to Database
+              </button>
+              <button className="small-btn" type="button" onClick={() => setEditing(null)}>
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+    </>
+  );
+}
+
+function FaqsPanel() {
+  const [items, setItems] = useState([]);
+  const [editing, setEditing] = useState(null);
+  const [form, setForm] = useState({ q: '', a: '', order: 0, isActive: true });
+  const [msg, setMsg] = useState('');
+
+  const load = () => {
+    api
+      .faqsAll()
+      .then((data) => {
+        if (data && data.length) setItems(data);
+        else setItems(FAQS);
+      })
+      .catch(() => setItems(FAQS));
+  };
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  const startNew = () => {
+    setEditing('new');
+    setForm({ q: '', a: '', order: items.length + 1, isActive: true });
+    setMsg('');
+  };
+
+  const startEdit = (f) => {
+    setEditing(f._id || f.q);
+    setForm({
+      _id: f._id,
+      q: f.q,
+      a: f.a,
+      order: f.order ?? 0,
+      isActive: f.isActive ?? true,
+    });
+    setMsg('');
+  };
+
+  const save = async (e) => {
+    e.preventDefault();
+    try {
+      if (editing === 'new' || !form._id) {
+        await api.createFaq(form);
+        setMsg('✓ Successfully added new FAQ');
+      } else {
+        await api.updateFaq(form._id, form);
+        setMsg('✓ Successfully updated FAQ');
+      }
+      setEditing(null);
+      load();
+    } catch (err) {
+      setMsg(`Error saving FAQ: ${err.message}`);
+    }
+  };
+
+  const remove = async (f) => {
+    if (!f._id) {
+      setItems(items.filter((x) => x.q !== f.q));
+      return;
+    }
+    if (confirm('Delete this FAQ question?')) {
+      await api.deleteFaq(f._id);
+      load();
+    }
+  };
+
+  return (
+    <>
+      <div className="panel">
+        <h3>Frequently Asked Questions ({items.length})</h3>
+        <p style={{ fontFamily: 'var(--sans)', fontSize: 13, color: '#666', marginTop: 4 }}>
+          Manage the FAQ accordions shown on the homepage. Questions and answers support HTML formatting.
+        </p>
+        <div className="toolbar" style={{ marginTop: 12 }}>
+          <button className="small-btn" onClick={startNew}>
+            + Add New FAQ
+          </button>
+          <button className="small-btn" onClick={load}>
+            Refresh
+          </button>
+          {msg && (
+            <span style={{ fontFamily: 'var(--sans)', fontSize: 13, color: '#137333', fontWeight: 600 }}>
+              {msg}
+            </span>
+          )}
+        </div>
+        <table className="admin-table">
+          <thead>
+            <tr>
+              <th style={{ width: 60 }}>Order</th>
+              <th>Question</th>
+              <th>Answer Preview</th>
+              <th style={{ width: 80 }}>Status</th>
+              <th style={{ width: 140 }}>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((f, idx) => (
+              <tr key={f._id || f.q}>
+                <td>
+                  <strong>{f.order ?? idx + 1}</strong>
+                </td>
+                <td>
+                  <strong>{f.q}</strong>
+                </td>
+                <td>
+                  <div
+                    style={{
+                      maxHeight: 60,
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      color: '#555',
+                    }}
+                  >
+                    {f.a.replace(/<[^>]+>/g, '')}
+                  </div>
+                </td>
+                <td>
+                  <span className={`badge ${f.isActive !== false ? 'published' : 'cancelled'}`}>
+                    {f.isActive !== false ? 'Active' : 'Hidden'}
+                  </span>
+                </td>
+                <td>
+                  <div className="row-actions">
+                    <button className="small-btn" onClick={() => startEdit(f)}>
+                      Edit
+                    </button>
+                    <button className="small-btn danger" onClick={() => remove(f)}>
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {editing && (
+        <div className="panel" style={{ marginTop: 24 }}>
+          <h3>{editing === 'new' ? 'Add New FAQ' : 'Edit FAQ'}</h3>
+          <form className="admin-form" onSubmit={save} style={{ marginTop: 16 }}>
+            <div>
+              <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>
+                Question
+              </label>
+              <input
+                placeholder="e.g. Is LLC publication in New York really required?"
+                value={form.q}
+                onChange={(e) => setForm({ ...form, q: e.target.value })}
+                required
+              />
+            </div>
+            <div>
+              <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>
+                Answer (HTML and links allowed)
+              </label>
+              <textarea
+                placeholder="e.g. Yes. Section 206 requires..."
+                value={form.a}
+                onChange={(e) => setForm({ ...form, a: e.target.value })}
+                style={{ minHeight: 140 }}
+                required
+              />
+            </div>
+            <div className="two-col">
+              <div>
+                <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 4 }}>
+                  Display Order
+                </label>
+                <input
+                  type="number"
+                  value={form.order}
+                  onChange={(e) => setForm({ ...form, order: Number(e.target.value) })}
+                />
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', paddingTop: 20 }}>
+                <label style={{ fontFamily: 'var(--sans)', fontSize: 13, cursor: 'pointer' }}>
+                  <input
+                    type="checkbox"
+                    checked={form.isActive}
+                    onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
+                  />{' '}
+                  Active (show on homepage)
+                </label>
+              </div>
+            </div>
+            <div className="toolbar">
+              <button className="btn btn-navy" type="submit">
+                Save FAQ
+              </button>
+              <button className="small-btn" type="button" onClick={() => setEditing(null)}>
+                Cancel
+              </button>
+            </div>
           </form>
         </div>
       )}

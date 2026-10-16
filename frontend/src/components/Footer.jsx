@@ -5,16 +5,18 @@ export default function Footer() {
     <footer className="footer">
       <div className="container">
         <div className="footer-grid">
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <span className="footer-mark">L</span>
-              <span className="footer-name">LLC Publication</span>
+          <div className="footer-brand">
+            <div className="footer-brand-row">
+              <div className="footer-mark">L</div>
+              <div className="footer-name">LLC Publication</div>
             </div>
-            <p style={{ fontFamily: 'var(--sans)', fontSize: 13, lineHeight: 1.7 }}>
+            <p>
               New York LLC publication service specializing in newspaper publishing, affidavits,
               Certificate of Publication filings, and LLC compliance support for new businesses.
             </p>
-            <a href="/#order" className="btn btn-gold" style={{ marginTop: 12 }}>Start Your LLC Publication →</a>
+            <p>
+              <a href="/#order">Start Your LLC Publication →</a>
+            </p>
           </div>
           <div>
             <div className="footer-eyebrow">Service</div>
@@ -22,19 +24,23 @@ export default function Footer() {
             <a href="/#pricing">Pricing</a>
             <a href="/#faq">FAQ</a>
             <Link to="/resources">Resources</Link>
+            <a href="https://portal.llcpublicationonline.com/" target="_blank" rel="noopener noreferrer">
+              Track Your Order
+            </a>
           </div>
           <div>
             <div className="footer-eyebrow">Resources</div>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Use</a>
-            <a href="#">Refund &amp; Cancellation Policy</a>
-            <Link to="/admin">Admin Panel</Link>
+            <Link to="/privacy-policy">Privacy Policy</Link>
+            <Link to="/terms-of-use">Terms of Use</Link>
+            <Link to="/refund-cancellation-policy">Refund &amp; Cancellation Policy</Link>
+            <Link to="/accessibility-statement">Accessibility Statement</Link>
+            <Link to="/sitemap">Sitemap</Link>
           </div>
           <div>
             <div className="footer-eyebrow">Contact</div>
             <a href="mailto:info@LLCPublicationOnline.com">info@LLCPublicationOnline.com</a>
             <a href="tel:+18884842204">(888) 484-2204</a>
-            <span style={{ fontFamily: 'var(--sans)', fontSize: 13 }}>M–F · 8a–6p ET</span>
+            <span className="footer-hours">M–F · 8a–6p ET</span>
           </div>
         </div>
         <div className="footer-disclaimer">
@@ -44,8 +50,7 @@ export default function Footer() {
           government agency. Use of our services is completely voluntary.
         </div>
         <div className="footer-bottom">
-          <span>© 2026 LLC Publication Online. All rights reserved.</span>
-          <span>§ 206 NY LLC Law Compliant</span>
+          <div>© 2026 LLC Publication Online. All rights reserved.</div>
         </div>
       </div>
     </footer>

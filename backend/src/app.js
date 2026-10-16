@@ -9,6 +9,8 @@ const ordersRouter = require('./routes/orders');
 const pricesRouter = require('./routes/prices');
 const articlesRouter = require('./routes/articles');
 const adminRouter = require('./routes/admin');
+const policiesRouter = require('./routes/policies');
+const faqsRouter = require('./routes/faqs');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -26,13 +28,23 @@ app.get('/', (req, res) =>
     ok: true,
     name: 'LLC Publication Online API',
     version: '1.0.0',
-    endpoints: ['/api/health', '/api/prices', '/api/orders', '/api/articles', '/api/admin/stats'],
+    endpoints: [
+      '/api/health',
+      '/api/prices',
+      '/api/orders',
+      '/api/articles',
+      '/api/policies',
+      '/api/faqs',
+      '/api/admin/stats',
+    ],
   })
 );
 app.get('/api/health', (req, res) => res.json({ ok: true, time: new Date().toISOString() }));
 app.use('/api/orders', ordersRouter);
 app.use('/api/prices', pricesRouter);
 app.use('/api/articles', articlesRouter);
+app.use('/api/policies', policiesRouter);
+app.use('/api/faqs', faqsRouter);
 app.use('/api/admin', adminRouter);
 
 app.use(notFound);

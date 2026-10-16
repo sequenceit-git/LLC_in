@@ -4,14 +4,27 @@ import { fmt } from '../data/seed';
 
 export default function OrderForm({ prices }) {
   const [form, setForm] = useState({
-    llcName: '', jurisdictionStatus: 'Domestic', county: '',
-    firstName: '', lastName: '', email: '', phone: '',
-    discountCode: '', card: '',
+    llcName: '',
+    jurisdictionStatus: 'Domestic',
+    county: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    discountCode: '',
+    card: '',
   });
   const [status, setStatus] = useState({ type: '', msg: '' });
   const [busy, setBusy] = useState(false);
 
-  const priceMap = useMemo(() => Object.fromEntries(prices.map((p) => [p.county, p.price])), [prices]);
+  const priceMap = useMemo(() => {
+    const map = {};
+    for (const p of prices) {
+      map[p.county] = form.jurisdictionStatus === 'Foreign' && p.priceForeign != null ? p.priceForeign : p.price;
+    }
+    return map;
+  }, [prices, form.jurisdictionStatus]);
+
   const amount = form.county ? priceMap[form.county] : null;
 
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
@@ -19,13 +32,31 @@ export default function OrderForm({ prices }) {
   async function submit(e) {
     e.preventDefault();
     setStatus({ type: '', msg: '' });
+    if (!form.llcName.trim()) return setStatus({ type: 'err', msg: 'Please enter your LLC name.' });
     if (!form.county) return setStatus({ type: 'err', msg: 'Please select a county.' });
+    if (!form.firstName.trim() || !form.lastName.trim()) return setStatus({ type: 'err', msg: 'Please enter your name.' });
+    if (!form.email.trim()) return setStatus({ type: 'err', msg: 'Please enter your email.' });
+    if (!form.phone.trim()) return setStatus({ type: 'err', msg: 'Please enter your phone number.' });
+
     setBusy(true);
     try {
       const { card: _omit, ...payload } = form;
       const r = await api.createOrder(payload);
-      setStatus({ type: 'ok', msg: `Order received for ${r.order.llcName} — ${fmt(r.order.amount)}. We will contact the newspapers within 24 hours.` });
-      setForm({ llcName: '', jurisdictionStatus: 'Domestic', county: '', firstName: '', lastName: '', email: '', phone: '', discountCode: '', card: '' });
+      setStatus({
+        type: 'ok',
+        msg: `Order received for ${r.order.llcName} — ${fmt(r.order.amount)}. We will contact the newspapers within 24 hours.`,
+      });
+      setForm({
+        llcName: '',
+        jurisdictionStatus: 'Domestic',
+        county: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+        discountCode: '',
+        card: '',
+      });
     } catch (err) {
       setStatus({ type: 'err', msg: err.message });
     } finally {
@@ -34,68 +65,189 @@ export default function OrderForm({ prices }) {
   }
 
   return (
-    <div className="order-grid container" style={{ paddingTop: 64, paddingBottom: 64 }}>
+    <div className="container order-grid">
       <aside className="order-aside">
-        <div className="eyebrow eyebrow-light"><span className="eyebrow-rule"></span>Begin</div>
-        <h2 className="display light">Place your <span className="italic gold">publication order.</span></h2>
-        <p className="order-aside-lede" style={{ fontFamily: 'var(--sans)', color: 'rgba(250,247,241,.8)' }}>
-          One form. One flat fee. Publication begins within days. We file your Certificate of Publication with the New York Department of State.
+        <div className="eyebrow eyebrow-light">Begin</div>
+        <h2 className="display light">
+          Place your <span className="italic gold">publication order.</span>
+        </h2>
+        <p className="order-aside-lede">
+          One form. One flat fee. Publication begins within days. We file your Certificate of
+          Publication with the New York Department of State.
         </p>
         <div className="order-summary">
           <div className="order-summary-eyebrow">Order Summary</div>
-          <div className="order-summary-county">{form.county || 'Select a county →'}</div>
-          <div className="order-summary-amount">{amount ? fmt(amount) : '$—'}</div>
+          <div className="order-summary-county" id="summaryCounty">
+            {form.county ? `${form.county} County` : 'Select a county →'}
+          </div>
+          <div className="order-summary-amount" id="summaryAmount">
+            {amount ? fmt(amount) : '$—'}
+          </div>
           <div className="order-summary-note">All-inclusive · No expedite fee · Filed with NY DOS</div>
         </div>
       </aside>
-      <form className="order-form" onSubmit={submit} noValidate>
+
+      <form className="order-form" id="orderForm" onSubmit={submit} noValidate>
         <div className="form-section">
           <div className="form-eyebrow">1 · Your LLC</div>
-          <div className="form-grid">
-            <label><span>LLC Name</span><input type="text" required placeholder="Acme Holdings LLC" value={form.llcName} onChange={set('llcName')} /></label>
+          <div className="form-grid form-grid-2">
+            <label>
+              <span>LLC Name</span>
+              <input
+                type="text"
+                name="llc_name"
+                required
+                placeholder="Acme Holdings LLC"
+                value={form.llcName}
+                onChange={set('llcName')}
+              />
+            </label>
             <fieldset className="jurisdiction-toggle">
-              <legend style={{ fontFamily: 'var(--sans)', fontSize: 13, fontWeight: 600 }}>Jurisdiction (optional)</legend>
+              <legend>Jurisdiction (optional)</legend>
               <div className="jurisdiction-toggle-options">
-                {['Domestic', 'Foreign'].map((v) => (
-                  <label key={v}><input type="radio" name="jurisdiction_status" checked={form.jurisdictionStatus === v} onChange={() => setForm({ ...form, jurisdictionStatus: v })} /><span>{v}</span></label>
-                ))}
+                <label>
+                  <input
+                    type="radio"
+                    name="jurisdiction_status"
+                    value="Domestic"
+                    checked={form.jurisdictionStatus === 'Domestic'}
+                    onChange={() => setForm({ ...form, jurisdictionStatus: 'Domestic' })}
+                  />
+                  <span>Domestic</span>
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="jurisdiction_status"
+                    value="Foreign"
+                    checked={form.jurisdictionStatus === 'Foreign'}
+                    onChange={() => setForm({ ...form, jurisdictionStatus: 'Foreign' })}
+                  />
+                  <span>Foreign</span>
+                </label>
               </div>
             </fieldset>
-            <label className="form-full"><span>County of Formation</span>
-              <select required value={form.county} onChange={set('county')}>
-                <option value="">Select county…</option>
-                {prices.map((p) => <option key={p.county} value={p.county}>{p.county} — {fmt(p.price)}</option>)}
+            <label className="form-full">
+              <span>County of Formation</span>
+              <select
+                name="county"
+                id="countySelect"
+                required
+                value={form.county}
+                onChange={set('county')}
+              >
+                <option value="">Select a county…</option>
+                {prices.map((p) => {
+                  const itemPrice = form.jurisdictionStatus === 'Foreign' && p.priceForeign != null ? p.priceForeign : p.price;
+                  return (
+                    <option key={p.county} value={p.county}>
+                      {p.county} — {fmt(itemPrice)}
+                    </option>
+                  );
+                })}
               </select>
             </label>
           </div>
         </div>
+
         <div className="form-section">
           <div className="form-eyebrow">2 · Contact</div>
-          <div className="form-grid">
-            <label><span>First Name</span><input type="text" required value={form.firstName} onChange={set('firstName')} /></label>
-            <label><span>Last Name</span><input type="text" required value={form.lastName} onChange={set('lastName')} /></label>
-            <label><span>Email</span><input type="email" required value={form.email} onChange={set('email')} /></label>
-            <label><span>Phone</span><input type="tel" required value={form.phone} onChange={set('phone')} /></label>
+          <div className="form-grid form-grid-2">
+            <label>
+              <span>First Name</span>
+              <input
+                type="text"
+                name="first_name"
+                required
+                value={form.firstName}
+                onChange={set('firstName')}
+              />
+            </label>
+            <label>
+              <span>Last Name</span>
+              <input
+                type="text"
+                name="last_name"
+                required
+                value={form.lastName}
+                onChange={set('lastName')}
+              />
+            </label>
+            <label>
+              <span>Email</span>
+              <input
+                type="email"
+                name="email"
+                required
+                value={form.email}
+                onChange={set('email')}
+              />
+            </label>
+            <label>
+              <span>Phone</span>
+              <input
+                type="tel"
+                name="phone"
+                required
+                value={form.phone}
+                onChange={set('phone')}
+              />
+            </label>
           </div>
         </div>
+
         <div className="form-section">
-          <div className="form-eyebrow"><span>3 · Payment</span><span className="form-secure">🔒 Secured via Stripe · 256-bit SSL</span></div>
+          <div className="form-eyebrow form-eyebrow-row">
+            <span>3 · Payment</span>
+            <span className="form-secure">🔒 Secured via Stripe · 256-bit SSL</span>
+          </div>
           <div className="form-grid">
-            <label className="form-full"><span>Credit Card (processed securely at launch — recorded as pending for now)</span>
-              <input type="text" inputMode="numeric" placeholder="4242 4242 4242 4242" value={form.card} onChange={set('card')} />
+            <label className="form-full">
+              <span>Card Details</span>
+              <div className="stripe-card-element">
+                <input
+                  type="text"
+                  placeholder="Card number  MM / YY  CVC"
+                  value={form.card}
+                  onChange={set('card')}
+                  style={{
+                    border: 'none',
+                    background: 'transparent',
+                    width: '100%',
+                    fontFamily: 'var(--sans)',
+                    fontSize: '15px',
+                    color: 'var(--navy)',
+                    outline: 'none',
+                  }}
+                />
+              </div>
             </label>
-            <label className="form-full"><span>Discount Code (optional)</span>
-              <input type="text" value={form.discountCode} onChange={set('discountCode')} />
+            <label className="form-full">
+              <span>Discount Code (optional)</span>
+              <input
+                type="text"
+                name="discount_code"
+                value={form.discountCode}
+                onChange={set('discountCode')}
+              />
             </label>
           </div>
         </div>
+
         <div className="form-foot">
-          <button className="btn btn-gold" type="submit" disabled={busy} style={{ width: '100%' }}>
+          <button type="submit" className="btn btn-submit" id="submitBtn" disabled={busy}>
             {busy ? 'Submitting…' : `Submit Order ${amount ? `— ${fmt(amount)}` : ''} →`}
           </button>
-          {status.msg && <div className={`form-status ${status.type}`}>{status.msg}</div>}
-          <div className="form-fine">By submitting, you authorize LLC Publication Online to charge the card above and arrange publication on your behalf. Refunds available before publication begins.</div>
         </div>
+        <div className="form-fine">
+          By submitting, you authorize LLC Publication Online to charge the card above and arrange
+          publication on your behalf. Refunds available before publication begins.
+        </div>
+        {status.msg && (
+          <div className={`form-status ${status.type}`} id="formStatus" role="status" aria-live="polite">
+            {status.msg}
+          </div>
+        )}
       </form>
     </div>
   );

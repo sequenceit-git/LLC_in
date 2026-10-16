@@ -7,6 +7,7 @@ import { FALLBACK_ARTICLES } from '../data/seed';
 
 export default function ResourcesPage() {
   const [articles, setArticles] = useState(FALLBACK_ARTICLES);
+
   useEffect(() => {
     api.articles().then((items) => {
       if (items.length) setArticles(items);
@@ -18,14 +19,22 @@ export default function ResourcesPage() {
       <Header />
       <section className="page-hero">
         <div className="container">
-          <div className="crumbs"><Link to="/">Home</Link> &nbsp;/&nbsp; Resources</div>
-          <div className="eyebrow eyebrow-light"><span className="eyebrow-rule"></span>Articles &amp; Guides</div>
-          <h1 className="display">LLC Publication <span className="italic">Resources.</span></h1>
+          <div className="crumbs">
+            <Link to="/">Home</Link> &nbsp;/&nbsp; Resources
+          </div>
+          <div className="eyebrow eyebrow-light">
+            <span className="eyebrow-rule"></span>Articles &amp; Guides
+          </div>
+          <h1>
+            LLC Publication <span className="italic">Resources.</span>
+          </h1>
           <p>
-            Plain-English guides written for New York founders — covering the legal requirement, how publication actually works, and the certificates banks and lenders ask for next.
+            Plain-English guides written for New York founders — covering the legal requirement, how
+            publication actually works, and the certificates banks and lenders ask for next.
           </p>
         </div>
       </section>
+
       <main>
         <div className="container">
           <div className="resources-grid">
@@ -38,13 +47,17 @@ export default function ResourcesPage() {
               </Link>
             ))}
           </div>
-          <div className="panel" style={{ textAlign: 'center', marginBottom: 56 }}>
-            <h3 style={{ fontFamily: 'var(--display)', fontSize: 28 }}>Ready to satisfy Section 206?</h3>
-            <p style={{ fontFamily: 'var(--sans)' }}>Lowest-priced LLC publication in New York. Flat fee. All 62 counties. Filed with NY DOS.</p>
-            <a href="/#order" className="btn btn-gold">Start Your LLC Publication →</a>
+
+          <div className="article-cta" style={{ margin: '0 0 96px' }}>
+            <h3>Ready to satisfy Section 206?</h3>
+            <p>Lowest-priced LLC publication in New York. Flat fee. All 62 counties. Filed with NY DOS.</p>
+            <a href="/#order" className="btn btn-gold">
+              Start Your LLC Publication →
+            </a>
           </div>
         </div>
       </main>
+
       <Footer />
     </>
   );

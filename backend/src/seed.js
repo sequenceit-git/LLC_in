@@ -1,5 +1,8 @@
 const CountyPrice = require('./models/CountyPrice');
 const Article = require('./models/Article');
+const Policy = require('./models/Policy');
+const Faq = require('./models/Faq');
+const { INITIAL_POLICIES } = require('./data/initialPolicies');
 
 // 1:1 county pricing extracted from the live site (flat all-inclusive fees)
 const COUNTIES = [
@@ -42,6 +45,45 @@ const ARTICLES = [
   { slug: 'how-to-publish-an-llc-in-new-york', title: 'How to Publish an LLC in New York', excerpt: 'Step-by-step: clerk designations, six-week run, affidavits, and DOS filing.', tag: 'Core Process', readingTime: '10 minutes', status: 'published', contentHtml: '<p>1) Confirm office county. 2) Get clerk-designated papers. 3) Draft notice. 4) Run six consecutive weeks in both papers. 5) Collect affidavits. 6) File Certificate of Publication with NY DOS. Or place one order and we do all six for you.</p>' },
 ];
 
+const FAQS = [
+  {
+    q: 'Is LLC publication in New York really required?',
+    a: 'Yes. Section 206 of the New York Limited Liability Company Law requires every domestic and foreign LLC to publish notice in two newspapers designated by the county clerk for six successive weeks. Failure to comply within 120 days suspends your authority to do business in New York.',
+    order: 1,
+    isActive: true,
+  },
+  {
+    q: 'Why does NYC cost more than other counties?',
+    a: 'The five NYC counties (Bronx, Kings, New York, Queens, Richmond) have court-set publication rates significantly higher than the rest of the state. We pass through the actual newspaper invoices plus our flat service fee — no markup.',
+    order: 2,
+    isActive: true,
+  },
+  {
+    q: 'How long does the entire process take?',
+    a: 'Publication runs six consecutive weeks. We typically begin the first week of your order. Once complete, we file the Certificate of Publication with NY DOS — total turnaround is usually 7–9 weeks from order to filing.',
+    order: 3,
+    isActive: true,
+  },
+  {
+    q: 'Do you charge extra to expedite?',
+    a: 'No. Every order is treated as expedited. We contact the newspapers within 24 hours and begin publication at the earliest available issue date.',
+    order: 4,
+    isActive: true,
+  },
+  {
+    q: 'What if I miss the 120-day window?',
+    a: 'You can still publish — the suspension is automatic but reversible. Once publication is complete and the Certificate is filed, your LLC is reinstated. We handle late filings at the same flat rates.',
+    order: 5,
+    isActive: true,
+  },
+  {
+    q: 'What do I receive when it’s done?',
+    a: 'You receive (1) copies of both newspaper Affidavits of Publication, (2) the filed Certificate of Publication with the NY DOS receipt stamp, and (3) tearsheets of the published notices — delivered as a digital packet.',
+    order: 6,
+    isActive: true,
+  },
+];
+
 async function seed() {
   for (const [county, price] of COUNTIES) {
     await CountyPrice.updateOne(
@@ -53,10 +95,16 @@ async function seed() {
   for (const a of ARTICLES) {
     await Article.updateOne({ slug: a.slug }, { $set: a }, { upsert: true });
   }
-  console.log(`Seeded ${COUNTIES.length} counties + ${ARTICLES.length} articles`);
+  for (const p of INITIAL_POLICIES) {
+    await Policy.updateOne({ slug: p.slug }, { $set: p }, { upsert: true });
+  }
+  for (const f of FAQS) {
+    await Faq.updateOne({ q: f.q }, { $set: f }, { upsert: true });
+  }
+  console.log(`Seeded ${COUNTIES.length} counties + ${ARTICLES.length} articles + ${INITIAL_POLICIES.length} policies + ${FAQS.length} FAQs`);
 }
 
-module.exports = { seed, COUNTIES, ARTICLES };
+module.exports = { seed, COUNTIES, ARTICLES, INITIAL_POLICIES, FAQS };
 
 if (require.main === module) {
   require('dotenv').config();
