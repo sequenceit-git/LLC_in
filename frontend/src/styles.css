@@ -29,7 +29,7 @@ input,select,button{font-family:inherit;font-size:100%}
 .btn-submit{background:var(--navy);color:var(--gold);padding:18px 36px;font-size:15px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase;border:0}
 .btn-submit:hover{background:var(--navy-dark)}
 .site-header{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--rule)}
-.nav-container{display:flex;align-items:center;justify-content:space-between;padding-top:16px;padding-bottom:16px}
+.nav-container{display:flex;align-items:center;justify-content:space-between;padding-top:20px;padding-bottom:20px}
 .brand{display:flex;align-items:center;gap:14px}
 .brand-mark{width:40px;height:40px;background:var(--navy);color:var(--gold);display:flex;align-items:center;justify-content:center;font-family:var(--display);font-size:22px;font-weight:700;letter-spacing:-.5px}
 .brand-name{font-family:var(--display);font-size:19px;font-weight:600;line-height:1}
