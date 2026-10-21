@@ -286,14 +286,22 @@ function PricingPanel() {
   );
 
   const saveOne = async (p) => {
-    const price = dirty[p.county] ?? p.price;
-    await api.updatePrice(p.county, { county: p.county, price: Number(price) });
-    setMsg(`Saved ${p.county} → ${fmt(price)}`);
+    const price = dirty[p.county]?.price ?? p.price;
+    const priceForeignVal = dirty[p.county]?.priceForeign !== undefined ? dirty[p.county]?.priceForeign : p.priceForeign;
+    const priceForeign = priceForeignVal === '' || priceForeignVal === null || priceForeignVal === undefined ? null : Number(priceForeignVal);
+    await api.updatePrice(p.county, { county: p.county, price: Number(price), priceForeign });
+    setMsg(`Saved ${p.county} → Dom: ${fmt(price)} | For: ${priceForeign != null ? fmt(priceForeign) : '—'}`);
     load();
   };
 
   const saveAll = async () => {
-    const rows = Object.entries(dirty).map(([county, price]) => ({ county, price: Number(price) }));
+    const rows = Object.entries(dirty).map(([county, val]) => {
+      const orig = items.find((i) => i.county === county) || {};
+      const price = val.price !== undefined ? Number(val.price) : orig.price;
+      const fVal = val.priceForeign !== undefined ? val.priceForeign : orig.priceForeign;
+      const priceForeign = fVal === '' || fVal === null || fVal === undefined ? null : Number(fVal);
+      return { county, price, priceForeign, isActive: orig.isActive ?? true };
+    });
     if (!rows.length) return;
     await api.bulkPrices(rows);
     setDirty({});
@@ -319,21 +327,58 @@ function PricingPanel() {
         {msg && <span style={{ fontFamily: 'var(--sans)', fontSize: 13 }}>{msg}</span>}
       </div>
       <div className="price-edit-grid">
-        {filtered.map((p) => (
-          <div className="price-cell" key={p.county}>
-            <span style={{ flex: 1 }}>{p.county}</span>
-            <span>$</span>
-            <input
-              type="number"
-              min="0"
-              value={dirty[p.county] ?? p.price}
-              onChange={(e) => setDirty({ ...dirty, [p.county]: e.target.value })}
-            />
-            <button className="small-btn" onClick={() => saveOne(p)}>
-              Save
-            </button>
-          </div>
-        ))}
+        {filtered.map((p) => {
+          const d = dirty[p.county] || {};
+          const curDom = d.price !== undefined ? d.price : p.price;
+          const curFor = d.priceForeign !== undefined ? d.priceForeign : (p.priceForeign ?? '');
+          return (
+            <div className="price-cell" key={p.county}>
+              <span style={{ flex: 1, fontWeight: 600 }}>{p.county}</span>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: '#555' }}>
+                  <span>Dom $</span>
+                  <input
+                    type="number"
+                    min="0"
+                    value={curDom}
+                    onChange={(e) =>
+                      setDirty({
+                        ...dirty,
+                        [p.county]: {
+                          ...d,
+                          price: e.target.value,
+                        },
+                      })
+                    }
+                    style={{ width: 68 }}
+                  />
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: '#555' }}>
+                  <span>For $</span>
+                  <input
+                    type="number"
+                    min="0"
+                    placeholder="None"
+                    value={curFor}
+                    onChange={(e) =>
+                      setDirty({
+                        ...dirty,
+                        [p.county]: {
+                          ...d,
+                          priceForeign: e.target.value,
+                        },
+                      })
+                    }
+                    style={{ width: 68 }}
+                  />
+                </label>
+              </div>
+              <button className="small-btn" onClick={() => saveOne(p)}>
+                Save
+              </button>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

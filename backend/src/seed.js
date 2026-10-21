@@ -7,23 +7,24 @@ const { INITIAL_POLICIES } = require('./data/initialPolicies');
 const { DEFAULT_COMPARISON } = require('./data/initialComparison');
 
 // 1:1 county pricing extracted from the live site (flat all-inclusive fees)
+// Foreign pricing includes standard newspaper notice surcharge (+20 to +50 depending on county)
 const COUNTIES = [
-  ['Albany', 349], ['Allegany', 349], ['Bronx', 1149], ['Broome', 349],
-  ['Cattaraugus', 349], ['Cayuga', 349], ['Chautauqua', 349], ['Chemung', 349],
-  ['Chenango', 349], ['Clinton', 349], ['Columbia', 399], ['Cortland', 349],
-  ['Delaware', 349], ['Dutchess', 399], ['Erie', 399], ['Essex', 399],
-  ['Franklin', 349], ['Fulton', 349], ['Genesee', 399], ['Greene', 399],
-  ['Hamilton', 349], ['Herkimer', 399], ['Jefferson', 349], ['Kings (Brooklyn)', 1149],
-  ['Lewis', 349], ['Livingston', 349], ['Madison', 349], ['Monroe', 449],
-  ['Montgomery', 349], ['Nassau', 499], ['New York (Manhattan)', 1299], ['Niagara', 349],
-  ['Oneida', 349], ['Onondaga', 349], ['Ontario', 399], ['Orange', 349],
-  ['Orleans', 349], ['Oswego', 349], ['Otsego', 349], ['Putnam', 499],
-  ['Queens', 999], ['Rensselaer', 349], ['Richmond (Staten Island)', 749], ['Rockland', 499],
-  ['Saratoga', 349], ['Schenectady', 349], ['Schoharie', 349], ['Schuyler', 349],
-  ['Seneca', 349], ['St. Lawrence', 349], ['Steuben', 349], ['Suffolk', 649],
-  ['Sullivan', 399], ['Tioga', 349], ['Tompkins', 399], ['Ulster', 349],
-  ['Warren', 349], ['Washington', 399], ['Wayne', 349], ['Westchester', 499],
-  ['Wyoming', 349], ['Yates', 349],
+  ['Albany', 349, 379], ['Allegany', 349, 379], ['Bronx', 1149, 1199], ['Broome', 349, 379],
+  ['Cattaraugus', 349, 379], ['Cayuga', 349, 379], ['Chautauqua', 349, 379], ['Chemung', 349, 379],
+  ['Chenango', 349, 379], ['Clinton', 349, 379], ['Columbia', 399, 429], ['Cortland', 349, 379],
+  ['Delaware', 349, 379], ['Dutchess', 399, 439], ['Erie', 399, 439], ['Essex', 399, 429],
+  ['Franklin', 349, 379], ['Fulton', 349, 379], ['Genesee', 399, 429], ['Greene', 399, 429],
+  ['Hamilton', 349, 379], ['Herkimer', 399, 429], ['Jefferson', 349, 379], ['Kings (Brooklyn)', 1149, 1199],
+  ['Lewis', 349, 379], ['Livingston', 349, 379], ['Madison', 349, 379], ['Monroe', 449, 489],
+  ['Montgomery', 349, 379], ['Nassau', 499, 549], ['New York (Manhattan)', 1299, 1349], ['Niagara', 349, 379],
+  ['Oneida', 349, 379], ['Onondaga', 349, 389], ['Ontario', 399, 429], ['Orange', 349, 389],
+  ['Orleans', 349, 379], ['Oswego', 349, 379], ['Otsego', 349, 379], ['Putnam', 499, 539],
+  ['Queens', 999, 1049], ['Rensselaer', 349, 379], ['Richmond (Staten Island)', 749, 799], ['Rockland', 499, 539],
+  ['Saratoga', 349, 379], ['Schenectady', 349, 379], ['Schoharie', 349, 379], ['Schuyler', 349, 379],
+  ['Seneca', 349, 379], ['St. Lawrence', 349, 379], ['Steuben', 349, 379], ['Suffolk', 649, 699],
+  ['Sullivan', 399, 429], ['Tioga', 349, 379], ['Tompkins', 399, 429], ['Ulster', 349, 389],
+  ['Warren', 349, 379], ['Washington', 399, 429], ['Wayne', 349, 379], ['Westchester', 499, 549],
+  ['Wyoming', 349, 379], ['Yates', 349, 379],
 ];
 
 const ARTICLES = [
@@ -87,10 +88,10 @@ const FAQS = [
 ];
 
 async function seed() {
-  for (const [county, price] of COUNTIES) {
+  for (const [county, price, priceForeign] of COUNTIES) {
     await CountyPrice.updateOne(
       { county },
-      { $set: { county, price, isActive: true } },
+      { $set: { county, price, priceForeign: priceForeign ?? null, isActive: true } },
       { upsert: true }
     );
   }
