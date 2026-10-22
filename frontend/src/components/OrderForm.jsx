@@ -67,9 +67,9 @@ export default function OrderForm({ prices }) {
   return (
     <div className="container order-grid">
       <aside className="order-aside">
-        <div className="eyebrow eyebrow-light">Compliance Onboarding</div>
+        <div className="eyebrow eyebrow-light">Start Your Order</div>
         <h2 className="display light">
-          Initiate your statutory <span className="italic gold">publication filing.</span>
+          Begin your required <span className="italic gold">LLC publication.</span>
         </h2>
         <p className="order-aside-lede">
           One streamlined form. Transparent flat pricing. Press placements confirmed within days and your official Certificate of Publication delivered directly upon Department of State recording.
