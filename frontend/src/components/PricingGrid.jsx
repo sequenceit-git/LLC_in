@@ -16,13 +16,12 @@ export default function PricingGrid({ prices }) {
     <>
       <div className="section-head pricing-head">
         <div>
-          <div className="eyebrow">Pricing</div>
+          <div className="eyebrow">County Tariffs</div>
           <h2 className="display navy">
-            Every county. <span className="italic">One flat fee.</span>
+            Statewide coverage. <span className="italic">Guaranteed flat fees.</span>
           </h2>
           <p className="pricing-sub">
-            Pricing is set by the county clerk&apos;s designated newspapers. We pass through the actual
-            newspaper rates plus a single flat service fee—no expedite fees, no add-ons.
+            Statutory rates are determined by county clerk-designated newspapers. We pass through true publisher invoices plus our single flat administration fee—with zero hidden markups or expedite charges.
           </p>
           <fieldset className="jurisdiction-toggle">
             <div className="jurisdiction-toggle-options">
@@ -34,7 +33,7 @@ export default function PricingGrid({ prices }) {
                   checked={jur === 'Domestic'}
                   onChange={() => setJur('Domestic')}
                 />
-                <span>Domestic</span>
+                <span>Domestic LLC</span>
               </label>
               <label>
                 <input
@@ -44,7 +43,7 @@ export default function PricingGrid({ prices }) {
                   checked={jur === 'Foreign'}
                   onChange={() => setJur('Foreign')}
                 />
-                <span>Foreign</span>
+                <span>Foreign LLC</span>
               </label>
             </div>
           </fieldset>
@@ -52,8 +51,8 @@ export default function PricingGrid({ prices }) {
         <input
           type="search"
           id="countySearch"
-          placeholder="Search counties…"
-          aria-label="Search counties"
+          placeholder="Filter 62 NY counties…"
+          aria-label="Filter 62 NY counties"
           className="county-search"
           value={q}
           onChange={(e) => setQ(e.target.value)}
@@ -70,8 +69,7 @@ export default function PricingGrid({ prices }) {
       </div>
 
       <div className="pricing-foot">
-        NYC counties (Bronx, Kings, New York, Queens, Richmond) are higher because the clerk-designated
-        newspapers there charge premium rates set by the courts.
+        * Notice: NYC metropolitan counties (Bronx, Kings, New York, Queens, Richmond) carry higher statutory tariffs set directly by court-designated legal newspapers.
       </div>
     </>
   );

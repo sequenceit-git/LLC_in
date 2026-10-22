@@ -54,28 +54,46 @@ export const FALLBACK_ARTICLES = [
 ];
 
 export const FAQS = [
-  { q: 'Is LLC publication in New York really required?', a: 'Yes. Section 206 of the New York Limited Liability Company Law requires every domestic and foreign LLC to publish notice in two newspapers designated by the county clerk for six successive weeks. Failure to comply within 120 days suspends your authority to do business in New York.' },
-  { q: 'Why does NYC cost more than other counties?', a: 'The five NYC counties (Bronx, Kings, New York, Queens, Richmond) have court-set publication rates significantly higher than the rest of the state. We pass through the actual newspaper invoices plus our flat service fee — no markup.' },
-  { q: 'How long does the entire process take?', a: 'Publication runs six consecutive weeks. We typically begin the first week of your order. Once complete, we file the Certificate of Publication with NY DOS — total turnaround is usually 7–9 weeks from order to filing.' },
-  { q: 'Do you charge extra to expedite?', a: 'No. Every order is treated as expedited. We contact the newspapers within 24 hours and begin publication at the earliest available issue date.' },
-  { q: 'What if I miss the 120-day window?', a: 'You can still publish — the suspension is automatic but reversible. Once publication is complete and the Certificate is filed, your LLC is reinstated. We handle late filings at the same flat rates.' },
-  { q: 'What do I receive when it’s done?', a: 'You receive (1) copies of both newspaper Affidavits of Publication, (2) the filed Certificate of Publication with the NY DOS receipt stamp, and (3) tearsheets of the published notices — delivered as a digital packet.' },
+  {
+    q: 'Is newspaper publication legally mandatory for New York LLCs?',
+    a: 'Yes. Under Section 206 of the New York Limited Liability Company Law, every domestic and authorized foreign LLC must publish formal notice in two periodicals designated by the county clerk for six consecutive weeks. Failing to file the resulting Certificate of Publication within 120 days leads to an automatic statutory suspension of your legal authority to conduct business in New York.',
+  },
+  {
+    q: 'Why does publication in NYC boroughs cost more than Upstate counties?',
+    a: 'In the five New York City counties (New York/Manhattan, Kings/Brooklyn, Queens, Bronx, and Richmond/Staten Island), court-designated legal newspapers charge substantially higher statutory advertising rates than Upstate periodicals. We pass through the precise publishing invoice plus our single flat administration fee—with zero hidden markups.',
+  },
+  {
+    q: 'What is the complete turnaround time from order placement to final state filing?',
+    a: 'The mandatory print sequence spans six consecutive calendar weeks. We initiate newspaper bookings within 24–48 hours of your order. Once the final issues circulate, publisher affidavits are gathered and your Certificate of Publication is submitted directly to the NY Department of State—delivering total turnaround in roughly 7 to 9 weeks.',
+  },
+  {
+    q: 'Are there any extra fees to expedite my publishing schedule?',
+    a: 'Never. Every client order is automatically handled as high priority. We submit publication notices to designated newspapers at their immediate upcoming editorial deadline without charging artificial rush fees.',
+  },
+  {
+    q: 'Can I still publish if my company missed the 120-day legal deadline?',
+    a: 'Yes. New York allows late compliance. While your operating authority is technically suspended once the 120 days lapse, completing the 6-week publication and filing the Certificate of Publication fully and retroactively reinstates your LLC in good standing. We process late filings at the exact same transparent rates.',
+  },
+  {
+    q: 'What documentation will I receive upon project completion?',
+    a: 'You will receive an official digital compliance dossier containing: (1) certified Affidavits of Publication from both newspapers, (2) the officially stamped and recorded Certificate of Publication from the NY Department of State, and (3) newspaper publication tear sheets for your company records.',
+  },
 ];
 
 export const FALLBACK_COMPARISON = {
-  eyebrow: 'The Comparison',
-  heading: 'Lower prices. Faster filings.',
-  headingAccent: 'No surprises.',
-  columns: ['', 'LLC Publication Online', 'Other Competitors'],
+  eyebrow: 'Comparative Analysis',
+  heading: 'Transparent statutory publishing vs.',
+  headingAccent: 'traditional filing services.',
+  columns: ['Compliance Feature', 'LLC Publication Online', 'Standard Competitors & Firms'],
   rows: [
-    { label: 'Starting price (most counties)', us: '$349', them: '$395–$499' },
-    { label: 'Expedite fee', us: 'None', them: '+$75–$99' },
-    { label: 'Newspapers arranged for you', us: 'Yes', them: 'Yes' },
-    { label: 'Certificate of Publication filed', us: 'Yes', them: 'Sometimes / add-on' },
-    { label: 'Publication starts', us: 'Same week', them: '1–3 weeks' },
-    { label: 'Lowest-price guarantee', us: 'Yes', them: 'No' },
+    { label: 'Base county price (Upstate & Regional)', us: '$349 flat (statewide standard)', them: '$425 – $650+' },
+    { label: 'Priority rush & expedite fees', us: '$0 (Expedited by default)', them: '+$75 – $150 surcharge' },
+    { label: 'Designated newspaper coordination', us: '2 clerk-assigned periodicals included', them: 'Included' },
+    { label: 'NY DOS Certificate preparation & filing', us: 'Included ($50 state fee handled)', them: 'Often a paid add-on ($100+)' },
+    { label: 'Press scheduling turnaround', us: 'Placements initiated within 24–48 hrs', them: '1–3 weeks typical delay' },
+    { label: 'Transparent all-inclusive billing', us: 'Yes (Guaranteed one flat fee)', them: 'No (Incremental add-ons)' },
   ],
-  ctaLabel: 'Get Started Now →',
+  ctaLabel: 'Begin Your LLC Publication →',
   ctaHref: '#order',
 };
 

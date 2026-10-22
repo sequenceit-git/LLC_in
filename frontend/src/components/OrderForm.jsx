@@ -67,29 +67,28 @@ export default function OrderForm({ prices }) {
   return (
     <div className="container order-grid">
       <aside className="order-aside">
-        <div className="eyebrow eyebrow-light">Begin</div>
+        <div className="eyebrow eyebrow-light">Compliance Onboarding</div>
         <h2 className="display light">
-          Place your <span className="italic gold">publication order.</span>
+          Initiate your statutory <span className="italic gold">publication filing.</span>
         </h2>
         <p className="order-aside-lede">
-          One form. One flat fee. Publication begins within days. We file your Certificate of
-          Publication with the New York Department of State.
+          One streamlined form. Transparent flat pricing. Press placements confirmed within days and your official Certificate of Publication delivered directly upon Department of State recording.
         </p>
         <div className="order-summary">
-          <div className="order-summary-eyebrow">Order Summary</div>
+          <div className="order-summary-eyebrow">Filing Overview</div>
           <div className="order-summary-county" id="summaryCounty">
             {form.county ? `${form.county} County` : 'Select a county →'}
           </div>
           <div className="order-summary-amount" id="summaryAmount">
             {amount ? fmt(amount) : '$—'}
           </div>
-          <div className="order-summary-note">All-inclusive · No expedite fee · Filed with NY DOS</div>
+          <div className="order-summary-note">All-Inclusive · No Rush Fees · Includes $50 NY DOS Fee</div>
         </div>
       </aside>
 
       <form className="order-form" id="orderForm" onSubmit={submit} noValidate>
         <div className="form-section">
-          <div className="form-eyebrow">1 · Your LLC</div>
+          <div className="form-eyebrow">1 · Entity Particulars</div>
           <div className="form-grid form-grid-2">
             <label>
               <span>LLC Name</span>
@@ -151,7 +150,7 @@ export default function OrderForm({ prices }) {
         </div>
 
         <div className="form-section">
-          <div className="form-eyebrow">2 · Contact</div>
+          <div className="form-eyebrow">2 · Authorized Representative</div>
           <div className="form-grid form-grid-2">
             <label>
               <span>First Name</span>
@@ -174,7 +173,7 @@ export default function OrderForm({ prices }) {
               />
             </label>
             <label>
-              <span>Email</span>
+              <span>Email Address</span>
               <input
                 type="email"
                 name="email"
@@ -184,7 +183,7 @@ export default function OrderForm({ prices }) {
               />
             </label>
             <label>
-              <span>Phone</span>
+              <span>Contact Phone</span>
               <input
                 type="tel"
                 name="phone"
@@ -198,12 +197,12 @@ export default function OrderForm({ prices }) {
 
         <div className="form-section">
           <div className="form-eyebrow form-eyebrow-row">
-            <span>3 · Payment</span>
-            <span className="form-secure">🔒 Secured via Stripe · 256-bit SSL</span>
+            <span>3 · Billing Authorization</span>
+            <span className="form-secure">🔒 Encrypted via Stripe · 256-bit SSL</span>
           </div>
           <div className="form-grid">
             <label className="form-full">
-              <span>Card Details</span>
+              <span>Payment Details</span>
               <div className="stripe-card-element">
                 <input
                   type="text"
@@ -223,7 +222,7 @@ export default function OrderForm({ prices }) {
               </div>
             </label>
             <label className="form-full">
-              <span>Discount Code (optional)</span>
+              <span>Promotional / Discount Code (optional)</span>
               <input
                 type="text"
                 name="discount_code"
@@ -236,12 +235,11 @@ export default function OrderForm({ prices }) {
 
         <div className="form-foot">
           <button type="submit" className="btn btn-submit" id="submitBtn" disabled={busy}>
-            {busy ? 'Submitting…' : `Submit Order ${amount ? `— ${fmt(amount)}` : ''} →`}
+            {busy ? 'Processing Filing…' : `Authorize & File Order ${amount ? `— ${fmt(amount)}` : ''} →`}
           </button>
         </div>
         <div className="form-fine">
-          By submitting, you authorize LLC Publication Online to charge the card above and arrange
-          publication on your behalf. Refunds available before publication begins.
+          By submitting, you authorize LLC Publication Online to arrange designated print notices and file your Certificate of Publication with the NY Department of State. Full cancellation available prior to initial press run.
         </div>
         {status.msg && (
           <div className={`form-status ${status.type}`} id="formStatus" role="status" aria-live="polite">

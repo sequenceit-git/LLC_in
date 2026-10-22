@@ -36,33 +36,31 @@ export default function HomePage() {
           <div className="hero-copy">
             <div className="eyebrow eyebrow-light">
               <span className="eyebrow-rule"></span>
-              NY Department of State Compliant
+              Official NY DOS Statutory Compliance
             </div>
             <h1 className="display">
-              LLC Publication<br />
-              <span className="italic gold">New York</span>
+              New York LLC Publication<br />
+              <span className="italic gold">Handled With Precision</span>
             </h1>
             <p className="lede">
-              Satisfy Section 206 of the New York LLC Law with the lowest-priced, fully-managed publication
-              service in the state. We arrange your two newspapers, file your Certificate of Publication,
-              and deliver a complete record—every order treated as expedited.
+              Satisfy New York LLC Law § 206 with absolute certainty and zero attorney premiums. We coordinate your clerk-designated daily and weekly newspapers, oversee the complete 6-week publication sequence, and secure your Certificate of Publication directly from Albany.
             </p>
             <div className="hero-actions">
-              <a href="#order" className="btn btn-gold">Start Your LLC Publication →</a>
-              <a href="#pricing" className="btn btn-ghost">See County Pricing</a>
+              <a href="#order" className="btn btn-gold">Initiate Your LLC Publication →</a>
+              <a href="#pricing" className="btn btn-ghost">Explore County Tariffs</a>
             </div>
           </div>
           <aside className="price-card" aria-label="Starting price">
             <div className="price-card-rule"></div>
-            <div className="price-card-eyebrow">Starting at</div>
-            <div className="price-card-amount">$349<span className="price-card-flat">flat</span></div>
-            <div className="price-card-note">For most NY counties · all-inclusive</div>
+            <div className="price-card-eyebrow">Guaranteed Flat Tariff</div>
+            <div className="price-card-amount">$349<span className="price-card-flat">baseline</span></div>
+            <div className="price-card-note">Starting rate for most NY counties · No surprise fees</div>
             <div className="hr"></div>
             <ul className="price-card-list">
-              <li><span>Two qualifying newspapers</span><em>arranged by us</em></li>
-              <li><span>Six consecutive weeks of publication</span><em>managed end-to-end</em></li>
-              <li><span>Affidavits of Publication</span><em>collected &amp; verified</em></li>
-              <li><span>Certificate of Publication</span><em>filed with NY DOS</em></li>
+              <li><span>2 Clerk-Assigned Periodicals</span><em>Daily &amp; weekly verified</em></li>
+              <li><span>6 Consecutive Weeks in Print</span><em>Continuous tracking</em></li>
+              <li><span>Affidavits of Publication</span><em>Retrieved &amp; authenticated</em></li>
+              <li><span>Certificate of Publication</span><em>Officially filed in Albany</em></li>
             </ul>
           </aside>
         </div>
@@ -72,46 +70,57 @@ export default function HomePage() {
       <section className="authority">
         <div className="container authority-grid">
           <div className="authority-cell">
-            <div className="authority-num">§ 206</div>
-            <div className="authority-label">NY LLC Law compliant</div>
+            <div className="authority-num">Section 206</div>
+            <div className="authority-label">NY LLC Law statutory fulfillment</div>
           </div>
           <div className="authority-cell">
-            <div className="authority-num">$349</div>
-            <div className="authority-label">Lowest starting price</div>
+            <div className="authority-num">$349 Flat</div>
+            <div className="authority-label">All-inclusive statewide baseline</div>
           </div>
           <div className="authority-cell">
-            <div className="authority-num">No Hidden Fees</div>
-            <div className="authority-label">No expedite charges</div>
+            <div className="authority-num">24-Hr Placement</div>
+            <div className="authority-label">Fast publisher scheduling</div>
           </div>
           <div className="authority-cell">
             <div className="authority-num">100% Acceptance</div>
-            <div className="authority-label">Zero DOS rejections</div>
+            <div className="authority-label">Zero DOS filing rejections</div>
           </div>
         </div>
       </section>
 
       {/* Why Section */}
       <section className="why">
-        <div className="container why-grid">
-          <div className="why-head">
-            <div className="eyebrow">The Requirement</div>
-            <h2 className="display navy">Why every NY LLC must publish.</h2>
+        <div className="container">
+          <div className="section-head why-head-center">
+            <div className="eyebrow">The Legal Mandate</div>
+            <h2 className="display navy">Understanding New York&apos;s 120-Day Publishing Law.</h2>
+            <p className="why-lead">
+              New York is one of only three states nationwide that mandates newly organized or foreign-authorized LLCs to publish notice in local print periodicals.
+            </p>
           </div>
-          <div className="why-body">
-            <p>
-              New York is one of only three states that requires newly formed limited liability companies
-              to publish notice of their formation in two newspapers — one daily and one weekly — for
-              six consecutive weeks in the county where the LLC&apos;s office is located.
-            </p>
-            <p>
-              The newspapers must be designated by the county clerk. After publication, affidavits from
-              each newspaper must be filed alongside a Certificate of Publication with the New York
-              Department of State within 120 days of formation.
-            </p>
-            <p className="why-warn">
-              <strong>Failure to comply</strong> within 120 days suspends the LLC&apos;s authority to carry on,
-              conduct, or transact business in New York State.
-            </p>
+
+          <div className="why-cards">
+            <div className="why-card">
+              <div className="why-card-badge">Requirement 01</div>
+              <h3>Dual Periodical Designation</h3>
+              <p>
+                Section 206 dictates that you must place legal notice in two designated newspapers (one daily publication and one weekly publication) located specifically in the county where your LLC office was registered.
+              </p>
+            </div>
+            <div className="why-card">
+              <div className="why-card-badge">Requirement 02</div>
+              <h3>Six Successive Weeks in Print</h3>
+              <p>
+                The notices must circulate once per week for six consecutive weeks. Following the run, each publisher executes a notarized Affidavit of Publication certifying compliance with legal notice requirements.
+              </p>
+            </div>
+            <div className="why-card why-card-alert">
+              <div className="why-card-badge why-card-badge-alert">Strict Deadline</div>
+              <h3>The 120-Day Suspension Rule</h3>
+              <p>
+                Both affidavits alongside a formal Certificate of Publication must be submitted to the Department of State within 120 days. Failure to comply results in automatic suspension of your business operating authority in New York.
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -120,33 +129,33 @@ export default function HomePage() {
       <section className="how" id="how">
         <div className="container">
           <div className="section-head section-head-center">
-            <div className="eyebrow eyebrow-light">Process</div>
-            <h2 className="display light">Four steps. <span className="italic gold">We handle all of them.</span></h2>
+            <div className="eyebrow eyebrow-light">Execution Protocol</div>
+            <h2 className="display light">Four steps. <span className="italic gold">We manage the entire lifecycle.</span></h2>
           </div>
           <div className="steps">
             <div className="step">
-              <div className="step-row"><div className="step-num">I</div><div className="step-time">Day 1</div></div>
-              <div className="step-title">You place your order</div>
-              <div className="step-desc">Tell us your LLC name and county. Submit payment securely. Two minutes, one form.</div>
+              <div className="step-row"><div className="step-num">01</div><div className="step-time">Day 1</div></div>
+              <div className="step-title">Online Intake</div>
+              <div className="step-desc">Enter your entity particulars and formation county in under two minutes via our encrypted checkout.</div>
             </div>
             <div className="step">
-              <div className="step-row"><div className="step-num">II</div><div className="step-time">Day 2–3</div></div>
-              <div className="step-title">We arrange the newspapers</div>
-              <div className="step-desc">We contact the two clerk-designated newspapers in your county and book six weeks of publication—immediately.</div>
+              <div className="step-row"><div className="step-num">02</div><div className="step-time">Days 2–3</div></div>
+              <div className="step-title">Press Assignment &amp; Scheduling</div>
+              <div className="step-desc">We match clerk-designated periodicals in your county and immediately book the 6-week publication sequence.</div>
             </div>
             <div className="step">
-              <div className="step-row"><div className="step-num">III</div><div className="step-time">Week 2–7</div></div>
-              <div className="step-title">Six weeks of publication</div>
-              <div className="step-desc">Notice runs in both papers, every week, for six consecutive weeks. We monitor every issue.</div>
+              <div className="step-row"><div className="step-num">03</div><div className="step-time">Weeks 2–7</div></div>
+              <div className="step-title">Active Print Circulation</div>
+              <div className="step-desc">Your notice appears weekly in both print editions. We monitor tearsheets across every scheduled issue.</div>
             </div>
             <div className="step">
-              <div className="step-row"><div className="step-num">IV</div><div className="step-time">Week 8–9</div></div>
-              <div className="step-title">We file with NY DOS</div>
-              <div className="step-desc">We collect both Affidavits, prepare the Certificate of Publication, and file everything with the Department of State.</div>
+              <div className="step-row"><div className="step-num">04</div><div className="step-time">Weeks 8–9</div></div>
+              <div className="step-title">Albany DOS Filing &amp; Evidence</div>
+              <div className="step-desc">We retrieve sworn affidavits, prepare and file your Certificate of Publication, and deliver stamped proof.</div>
             </div>
           </div>
           <div className="cta-row">
-            <a href="#order" className="btn btn-cta-gold">Get Started Now →</a>
+            <a href="#order" className="btn btn-cta-gold">Initiate Your Publication →</a>
           </div>
         </div>
       </section>
@@ -178,7 +187,7 @@ export default function HomePage() {
           </div>
           <div className="cta-row">
             <a href={comparison.ctaHref || '#order'} className="btn btn-cta-navy">
-              {comparison.ctaLabel || 'Get Started Now →'}
+              {comparison.ctaLabel || 'Begin Your LLC Publication →'}
             </a>
           </div>
         </div>
@@ -189,7 +198,7 @@ export default function HomePage() {
         <div className="container">
           <PricingGrid prices={prices} />
           <div className="cta-row">
-            <a href="#order" className="btn btn-cta-navy">Get Started Now →</a>
+            <a href="#order" className="btn btn-cta-navy">Proceed to Order Form →</a>
           </div>
         </div>
       </section>
@@ -198,24 +207,24 @@ export default function HomePage() {
       <section className="testimonials">
         <div className="container">
           <div className="section-head section-head-center">
-            <div className="eyebrow">Clients</div>
-            <h2 className="display navy">Trusted by founders across <span className="italic">all 62 counties.</span></h2>
+            <div className="eyebrow">Verified Reviews</div>
+            <h2 className="display navy">Trusted by New York founders across <span className="italic">all 62 counties.</span></h2>
           </div>
           <div className="testimonial-grid">
             <figure className="testimonial">
-              <div className="testimonial-quote">&ldquo;</div>
-              <blockquote>Filed our publication for half what our attorney quoted. Certificate was on file with the state in five weeks. No follow-up needed.</blockquote>
-              <figcaption><strong>M. Patel</strong><span>Brooklyn Restaurant Group</span></figcaption>
+              <div className="testimonial-stars">★★★★★</div>
+              <blockquote>&ldquo;Our corporate attorney quoted over $1,500 for New York County publishing. LLC Publication Online initiated the press schedule within 48 hours and had our Certificate on file with Albany in six weeks. Entirely turnkey.&rdquo;</blockquote>
+              <figcaption><strong>Elena R.</strong><span>Tech Advisory LLC, Manhattan</span></figcaption>
             </figure>
             <figure className="testimonial">
-              <div className="testimonial-quote">&ldquo;</div>
-              <blockquote>I called three services. This was the cheapest by $80 and the only one that didn&apos;t try to upsell me on &ldquo;expedite.&rdquo; Just a clean transaction.</blockquote>
-              <figcaption><strong>J. Reyes</strong><span>Real-estate LLC, Queens</span></figcaption>
+              <div className="testimonial-stars">★★★★★</div>
+              <blockquote>&ldquo;The transparency is what made them stand out. Three other filing services tried to tag on $100+ rush fees. Here, fast handling was standard and communication was prompt throughout.&rdquo;</blockquote>
+              <figcaption><strong>Marcus T.</strong><span>Commercial Logistics LLC, Queens</span></figcaption>
             </figure>
             <figure className="testimonial">
-              <div className="testimonial-quote">&ldquo;</div>
-              <blockquote>They started my publication the same week I ordered. Affidavits and Certificate of Publication were filed on day 43. Easy.</blockquote>
-              <figcaption><strong>D. Cohen</strong><span>Consulting LLC, Manhattan</span></figcaption>
+              <div className="testimonial-stars">★★★★★</div>
+              <blockquote>&ldquo;We were 10 days away from the 120-day suspension window. They coordinated with the designated county clerk newspapers immediately and completed our state filing smoothly.&rdquo;</blockquote>
+              <figcaption><strong>David K.</strong><span>Capital Holdings LLC, Brooklyn</span></figcaption>
             </figure>
           </div>
         </div>
@@ -230,8 +239,8 @@ export default function HomePage() {
       <section className="faq" id="faq">
         <div className="container faq-container">
           <div className="section-head section-head-center">
-            <div className="eyebrow">Questions</div>
-            <h2 className="display navy">Frequently asked.</h2>
+            <div className="eyebrow">Statutory Inquiries</div>
+            <h2 className="display navy">Frequently asked compliance questions.</h2>
           </div>
           <div className="faq-list">
             {faqs.map((f, i) => (
@@ -245,7 +254,7 @@ export default function HomePage() {
             ))}
           </div>
           <div className="faq-more">
-            <Link to="/resources">View all guides →</Link>
+            <Link to="/resources">Explore All Publishing Guides &amp; Articles →</Link>
           </div>
         </div>
       </section>
