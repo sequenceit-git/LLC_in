@@ -333,9 +333,9 @@ function PricingPanel() {
           const curFor = d.priceForeign !== undefined ? d.priceForeign : (p.priceForeign ?? '');
           return (
             <div className="price-cell" key={p.county}>
-              <span style={{ flex: 1, fontWeight: 600 }}>{p.county}</span>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: '#555' }}>
+              <span className="county-name">{p.county}</span>
+              <div className="price-cell-inputs">
+                <label>
                   <span>Dom $</span>
                   <input
                     type="number"
@@ -350,10 +350,9 @@ function PricingPanel() {
                         },
                       })
                     }
-                    style={{ width: 68 }}
                   />
                 </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: '#555' }}>
+                <label>
                   <span>For $</span>
                   <input
                     type="number"
@@ -369,7 +368,6 @@ function PricingPanel() {
                         },
                       })
                     }
-                    style={{ width: 68 }}
                   />
                 </label>
               </div>
@@ -635,7 +633,7 @@ function StatementsPanel() {
     <>
       <div className="panel">
         <h3>Resource Column Statements ({items.length})</h3>
-        <p style={{ fontFamily: 'var(--sans)', fontSize: 13, color: '#666', marginTop: 4 }}>
+        <p className="panel-desc">
           Manage and edit the 5 legal statements and resource pages linked in the footer. Changes persist to MongoDB.
         </p>
         <div className="toolbar" style={{ marginTop: 12 }}>
@@ -643,7 +641,7 @@ function StatementsPanel() {
             Refresh
           </button>
           {msg && (
-            <span style={{ fontFamily: 'var(--sans)', fontSize: 13, color: '#137333', fontWeight: 600 }}>
+            <span className="admin-msg-success">
               {msg}
             </span>
           )}
@@ -836,7 +834,7 @@ function FaqsPanel() {
     <>
       <div className="panel">
         <h3>Frequently Asked Questions ({items.length})</h3>
-        <p style={{ fontFamily: 'var(--sans)', fontSize: 13, color: '#666', marginTop: 4 }}>
+        <p className="panel-desc">
           Manage the FAQ accordions shown on the homepage. Questions and answers support HTML formatting.
         </p>
         <div className="toolbar" style={{ marginTop: 12 }}>
@@ -847,7 +845,7 @@ function FaqsPanel() {
             Refresh
           </button>
           {msg && (
-            <span style={{ fontFamily: 'var(--sans)', fontSize: 13, color: '#137333', fontWeight: 600 }}>
+            <span className="admin-msg-success">
               {msg}
             </span>
           )}
@@ -1084,7 +1082,7 @@ function ComparisonPanel() {
   return (
     <div className="panel">
       <h3>Home page · “The Comparison” section</h3>
-      <p style={{ fontFamily: 'var(--sans)', fontSize: 13, color: '#666', marginTop: 4 }}>
+      <p className="panel-desc">
         Edit the comparison table shown on the home page. Column 2 is your highlighted column, column 3 is
         the competitors. The preview below updates live as you type.
       </p>
@@ -1259,12 +1257,12 @@ function ComparisonPanel() {
             Restore defaults
           </button>
           {msg && (
-            <span style={{ fontFamily: 'var(--sans)', fontSize: 13, color: '#137333', fontWeight: 600 }}>
+            <span className="admin-msg-success">
               {msg}
             </span>
           )}
           {error && (
-            <span style={{ fontFamily: 'var(--sans)', fontSize: 13, color: '#c5221f', fontWeight: 600 }}>
+            <span className="admin-msg-error">
               {error}
             </span>
           )}
