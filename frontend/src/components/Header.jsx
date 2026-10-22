@@ -8,7 +8,7 @@ export default function Header() {
     <header className="site-header" id="top">
       <div className="container nav-container">
         <Link to="/" className="brand" aria-label="LLC Publication Online — Home">
-          <div className="brand-mark">L</div>
+          <img src="/logo.png" alt="LLC Publication Online" className="brand-logo-img" />
           <div className="brand-text">
             <div className="brand-name">LLC Publication</div>
             <div className="brand-tag">Online · New York</div>

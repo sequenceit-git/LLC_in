@@ -7,7 +7,7 @@ export default function Footer() {
         <div className="footer-grid">
           <div className="footer-brand">
             <div className="footer-brand-row">
-              <div className="footer-mark">L</div>
+              <img src="/logo.png" alt="LLC Publication Online" className="footer-logo-img" />
               <div className="footer-name">LLC Publication</div>
             </div>
             <p>

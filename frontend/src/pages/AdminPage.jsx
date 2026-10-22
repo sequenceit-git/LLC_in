@@ -41,7 +41,7 @@ export default function AdminPage() {
     <div className="admin-wrap">
       <aside className={`admin-sidebar ${menuOpen ? 'open' : ''}`}>
         <Link to="/" className="admin-brand">
-          <span className="admin-brand-mark">L</span>
+          <img src="/logo.png" alt="LLC Publication Online" className="admin-brand-img" />
           <span className="admin-brand-text">
             <span className="admin-brand-name">LLC Publication</span>
             <span className="admin-brand-tag">Admin Console</span>
