@@ -1,9 +1,24 @@
 import { useMemo, useState } from 'react';
 import { fmt } from '../data/seed';
+import { useLanguage } from '../context/LanguageContext';
 
-export default function PricingGrid({ prices }) {
+export default function PricingGrid({
+  prices,
+  selectedCounty,
+  onSelectCounty,
+  jurisdictionStatus,
+  onJurisdictionChange,
+}) {
+  const { t } = useLanguage();
   const [q, setQ] = useState('');
-  const [jur, setJur] = useState('Domestic');
+  const [internalJur, setInternalJur] = useState('Domestic');
+
+  const jur = jurisdictionStatus !== undefined ? jurisdictionStatus : internalJur;
+
+  const setJur = (val) => {
+    setInternalJur(val);
+    if (onJurisdictionChange) onJurisdictionChange(val);
+  };
 
   const rows = useMemo(
     () => prices.filter((p) => p.county.toLowerCase().includes(q.toLowerCase())),
@@ -12,16 +27,30 @@ export default function PricingGrid({ prices }) {
 
   const priceFor = (p) => (jur === 'Foreign' && p.priceForeign != null ? p.priceForeign : p.price);
 
+  const handleCountyClick = (countyName) => {
+    if (onSelectCounty) {
+      onSelectCounty(countyName, jur);
+    }
+    const orderEl = document.getElementById('order');
+    if (orderEl) {
+      orderEl.scrollIntoView({ behavior: 'smooth' });
+    }
+    const selectEl = document.getElementById('countySelect');
+    if (selectEl) {
+      setTimeout(() => selectEl.focus(), 350);
+    }
+  };
+
   return (
     <>
       <div className="section-head pricing-head">
         <div>
-          <div className="eyebrow">County Tariffs</div>
+          <div className="eyebrow">{t('pricing', 'eyebrow')}</div>
           <h2 className="display navy">
-            Statewide coverage. <span className="italic">Guaranteed flat fees.</span>
+            {t('pricing', 'heading1')} <span className="italic">{t('pricing', 'heading2')}</span>
           </h2>
           <p className="pricing-sub">
-            Statutory rates are determined by county clerk-designated newspapers. We pass through true publisher invoices plus our single flat administration fee—with zero hidden markups or expedite charges.
+            {t('pricing', 'sub')}
           </p>
           <fieldset className="jurisdiction-toggle">
             <div className="jurisdiction-toggle-options">
@@ -33,7 +62,7 @@ export default function PricingGrid({ prices }) {
                   checked={jur === 'Domestic'}
                   onChange={() => setJur('Domestic')}
                 />
-                <span>Domestic LLC</span>
+                <span>{t('pricing', 'domestic')}</span>
               </label>
               <label>
                 <input
@@ -43,7 +72,7 @@ export default function PricingGrid({ prices }) {
                   checked={jur === 'Foreign'}
                   onChange={() => setJur('Foreign')}
                 />
-                <span>Foreign LLC</span>
+                <span>{t('pricing', 'foreign')}</span>
               </label>
             </div>
           </fieldset>
@@ -51,8 +80,8 @@ export default function PricingGrid({ prices }) {
         <input
           type="search"
           id="countySearch"
-          placeholder="Filter 62 NY counties…"
-          aria-label="Filter 62 NY counties"
+          placeholder={t('pricing', 'searchPlaceholder')}
+          aria-label={t('pricing', 'searchPlaceholder')}
           className="county-search"
           value={q}
           onChange={(e) => setQ(e.target.value)}
@@ -60,16 +89,36 @@ export default function PricingGrid({ prices }) {
       </div>
 
       <div className="county-grid" id="countyGrid" role="list">
-        {rows.map((p) => (
-          <div className="county-row" role="listitem" key={p.county}>
-            <span className="county-name">{p.county}</span>
-            <span className="county-price">{fmt(priceFor(p))}</span>
-          </div>
-        ))}
+        {rows.map((p) => {
+          const isSelected = selectedCounty === p.county;
+          return (
+            <div
+              className={`county-row ${isSelected ? 'is-selected' : ''}`}
+              role="button"
+              tabIndex={0}
+              key={p.county}
+              onClick={() => handleCountyClick(p.county)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleCountyClick(p.county);
+                }
+              }}
+              title={`Click to select ${p.county} for your order`}
+              aria-label={`Select ${p.county} for ${fmt(priceFor(p))}`}
+            >
+              <span className="county-name">{p.county}</span>
+              <div className="county-price-wrap">
+                <span className="county-price">{fmt(priceFor(p))}</span>
+                <span className="county-select-hint">{t('pricing', 'selectHint')}</span>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       <div className="pricing-foot">
-        * Notice: NYC metropolitan counties (Bronx, Kings, New York, Queens, Richmond) carry higher statutory tariffs set directly by court-designated legal newspapers.
+        {t('pricing', 'notice')}
       </div>
     </>
   );

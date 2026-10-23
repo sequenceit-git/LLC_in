@@ -2,6 +2,7 @@ const express = require('express');
 const Order = require('../models/Order');
 const CountyPrice = require('../models/CountyPrice');
 const { orderSchema, validate } = require('../middleware/validate');
+const { requireAuth } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -28,8 +29,8 @@ router.post('/', validate(orderSchema), async (req, res, next) => {
   }
 });
 
-// ADMIN: list with pagination / search / status filter
-router.get('/', async (req, res, next) => {
+// ADMIN: list with pagination / search / status filter (Protected)
+router.get('/', requireAuth, async (req, res, next) => {
   try {
     const page = Math.max(1, parseInt(req.query.page || '1', 10));
     const limit = Math.min(100, Math.max(1, parseInt(req.query.limit || '20', 10)));
@@ -55,7 +56,7 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.patch('/:id', async (req, res, next) => {
+router.patch('/:id', requireAuth, async (req, res, next) => {
   try {
     const allowed = ['status', 'paymentStatus', 'adminNotes', 'amount'];
     const patch = {};
@@ -68,7 +69,7 @@ router.patch('/:id', async (req, res, next) => {
   }
 });
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', requireAuth, async (req, res, next) => {
   try {
     const r = await Order.findByIdAndDelete(req.params.id);
     if (!r) return res.status(404).json({ error: 'Order not found' });

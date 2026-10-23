@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const { lang, setLang, t } = useLanguage();
 
   return (
     <header className="site-header" id="top">
@@ -28,16 +30,30 @@ export default function Header() {
           id="primaryNav"
           onClick={() => setOpen(false)}
         >
-          <NavLink to="/" end>Home</NavLink>
-          <a href="/#how">How It Works</a>
-          <a href="/#pricing">Pricing</a>
-          <a href="/#faq">FAQ</a>
-          <NavLink to="/resources">Resources</NavLink>
-          <a href="/#order" className="nav-cta">Order Now</a>
+          <NavLink to="/" end>{t('nav', 'home')}</NavLink>
+          <a href="/#how">{t('nav', 'how')}</a>
+          <a href="/#pricing">{t('nav', 'pricing')}</a>
+          <a href="/#faq">{t('nav', 'faq')}</a>
+          <NavLink to="/resources">{t('nav', 'resources')}</NavLink>
+          <a href="/#order" className="nav-cta">{t('nav', 'order')}</a>
         </nav>
-        <div className="lang-toggle" aria-label="Language">
-          <a href="#en" className="is-active">EN</a>
-          <a href="#es">ES</a>
+        <div className="lang-toggle" aria-label="Language selector">
+          <button
+            type="button"
+            className={`lang-btn ${lang === 'en' ? 'is-active' : ''}`}
+            onClick={() => setLang('en')}
+            aria-label="English"
+          >
+            EN
+          </button>
+          <button
+            type="button"
+            className={`lang-btn ${lang === 'es' ? 'is-active' : ''}`}
+            onClick={() => setLang('es')}
+            aria-label="Español"
+          >
+            ES
+          </button>
         </div>
       </div>
     </header>

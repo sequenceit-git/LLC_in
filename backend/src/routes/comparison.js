@@ -1,6 +1,7 @@
 const express = require('express');
 const Comparison = require('../models/Comparison');
 const { DEFAULT_COMPARISON } = require('../data/initialComparison');
+const { requireAuth } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -43,7 +44,7 @@ router.get('/', async (req, res, next) => {
 });
 
 // ADMIN: update the comparison block
-router.put('/', async (req, res, next) => {
+router.put('/', requireAuth, async (req, res, next) => {
   try {
     const patch = sanitize(req.body);
     const item = await Comparison.findOneAndUpdate(
@@ -58,7 +59,7 @@ router.put('/', async (req, res, next) => {
 });
 
 // ADMIN: restore the shipped defaults
-router.post('/reset', async (req, res, next) => {
+router.post('/reset', requireAuth, async (req, res, next) => {
   try {
     const item = await Comparison.findOneAndUpdate(
       { key: KEY },

@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function Footer() {
+  const { t } = useLanguage();
+
   return (
     <footer className="footer">
       <div className="container">
@@ -11,25 +14,24 @@ export default function Footer() {
               <div className="footer-name">LLC Publication</div>
             </div>
             <p>
-              New York LLC publication service specializing in newspaper publishing, affidavits,
-              Certificate of Publication filings, and LLC compliance support for new businesses.
+              {t('footer', 'desc')}
             </p>
             <p>
-              <a href="/#order">Start Your LLC Publication →</a>
+              <a href="/#order">{t('footer', 'cta')}</a>
             </p>
           </div>
           <div>
-            <div className="footer-eyebrow">Service</div>
-            <a href="/#how">How It Works</a>
-            <a href="/#pricing">Pricing</a>
-            <a href="/#faq">FAQ</a>
-            <Link to="/resources">Resources</Link>
+            <div className="footer-eyebrow">{t('footer', 'colService')}</div>
+            <a href="/#how">{t('nav', 'how')}</a>
+            <a href="/#pricing">{t('nav', 'pricing')}</a>
+            <a href="/#faq">{t('nav', 'faq')}</a>
+            <Link to="/resources">{t('nav', 'resources')}</Link>
             <a href="https://portal.llcpublicationonline.com/" target="_blank" rel="noopener noreferrer">
-              Track Your Order
+              {t('footer', 'trackOrder')}
             </a>
           </div>
           <div>
-            <div className="footer-eyebrow">Resources</div>
+            <div className="footer-eyebrow">{t('footer', 'colResources')}</div>
             <Link to="/privacy-policy">Privacy Policy</Link>
             <Link to="/terms-of-use">Terms of Use</Link>
             <Link to="/refund-cancellation-policy">Refund &amp; Cancellation Policy</Link>
@@ -37,20 +39,17 @@ export default function Footer() {
             <Link to="/sitemap">Sitemap</Link>
           </div>
           <div>
-            <div className="footer-eyebrow">Contact</div>
+            <div className="footer-eyebrow">{t('footer', 'colContact')}</div>
             <a href="mailto:info@LLCPublicationOnline.com">info@LLCPublicationOnline.com</a>
             <a href="tel:+18884842204">(888) 484-2204</a>
-            <span className="footer-hours">M–F · 8a–6p ET</span>
+            <span className="footer-hours">{t('footer', 'hours')}</span>
           </div>
         </div>
         <div className="footer-disclaimer">
-          LLC Publication Online is a document preparation and retrieval service. We are not a law firm
-          and do not provide any legal advice. The information on our website is for general informational
-          purposes only and is not legal advice. LLC Publication Online is not affiliated with any state
-          government agency. Use of our services is completely voluntary.
+          {t('footer', 'disclaimer')}
         </div>
         <div className="footer-bottom">
-          <div>© 2026 LLC Publication Online. All rights reserved.</div>
+          <div>© 2026 LLC Publication Online. {t('footer', 'rights')}</div>
         </div>
       </div>
     </footer>

@@ -1,6 +1,7 @@
 const express = require('express');
 const CountyPrice = require('../models/CountyPrice');
 const { priceUpsertSchema, validate } = require('../middleware/validate');
+const { requireAuth } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -15,7 +16,7 @@ router.get('/', async (req, res, next) => {
 });
 
 // ADMIN: full list incl. inactive
-router.get('/all', async (req, res, next) => {
+router.get('/all', requireAuth, async (req, res, next) => {
   try {
     const items = await CountyPrice.find({}).sort({ county: 1 });
     res.json({ items });
@@ -25,7 +26,7 @@ router.get('/all', async (req, res, next) => {
 });
 
 // ADMIN: create or update single county
-router.put('/:county', validate(priceUpsertSchema), async (req, res, next) => {
+router.put('/:county', requireAuth, validate(priceUpsertSchema), async (req, res, next) => {
   try {
     const doc = await CountyPrice.findOneAndUpdate(
       { county: new RegExp(`^${req.params.county}$`, 'i') },
@@ -39,7 +40,7 @@ router.put('/:county', validate(priceUpsertSchema), async (req, res, next) => {
 });
 
 // ADMIN: bulk upsert [{county, price, ...}]
-router.post('/bulk', async (req, res, next) => {
+router.post('/bulk', requireAuth, async (req, res, next) => {
   try {
     const rows = Array.isArray(req.body.items) ? req.body.items : [];
     if (!rows.length) return res.status(400).json({ error: 'items[] required' });

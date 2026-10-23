@@ -3,6 +3,8 @@ import { Link, Navigate, useParams } from 'react-router-dom';
 import { api } from '../api';
 import { fmt, FALLBACK_POLICIES, FALLBACK_COMPARISON, FAQS } from '../data/seed';
 import RowMenu from '../components/RowMenu';
+import { useAuth } from '../context/AuthContext';
+import AdminLogin from '../components/AdminLogin';
 
 const NAV = [
   { id: 'orders', label: 'Orders', icon: '▤' },
@@ -16,6 +18,7 @@ const NAV = [
 const TAB_IDS = NAV.map((n) => n.id);
 
 export default function AdminPage() {
+  const { isAuthenticated, loading, user, logout } = useAuth();
   const { tab: tabParam } = useParams();
   const isValidTab = TAB_IDS.includes(tabParam);
   const tab = isValidTab ? tabParam : 'orders';
@@ -24,13 +27,28 @@ export default function AdminPage() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    api.stats().then(setStats).catch(() => setStats(null));
-  }, [tab]);
+    if (isAuthenticated) {
+      api.stats().then(setStats).catch(() => setStats(null));
+    }
+  }, [tab, isAuthenticated]);
 
   useEffect(() => {
     setMenuOpen(false);
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [tab]);
+
+  if (loading) {
+    return (
+      <div className="admin-loading-screen">
+        <div className="admin-spinner" />
+        <p>Verifying secure admin session…</p>
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <AdminLogin />;
+  }
 
   const current = NAV.find((n) => n.id === tab);
 
@@ -62,8 +80,14 @@ export default function AdminPage() {
           ))}
         </nav>
         <div className="admin-sidebar-foot">
+          <div className="admin-user-pill">
+            <span className="admin-user-dot" aria-hidden="true"></span>
+            <span className="admin-user-name">{user?.username || 'kaziranausa'}</span>
+          </div>
+          <button type="button" onClick={logout} className="admin-logout-btn">
+            Sign Out
+          </button>
           <Link to="/" className="admin-side-link">← View live site</Link>
-          <div className="admin-auth-note">No-auth mode · add auth before launch</div>
         </div>
       </aside>
 

@@ -1,9 +1,41 @@
 const API_BASE = import.meta.env.VITE_API_URL || '';
 
+export const authStorage = {
+  getToken: () => localStorage.getItem('llc_admin_token') || '',
+  setToken: (token) => {
+    if (token) localStorage.setItem('llc_admin_token', token);
+    else localStorage.removeItem('llc_admin_token');
+  },
+  getUser: () => {
+    try {
+      return JSON.parse(localStorage.getItem('llc_admin_user') || 'null');
+    } catch {
+      return null;
+    }
+  },
+  setUser: (user) => {
+    if (user) localStorage.setItem('llc_admin_user', JSON.stringify(user));
+    else localStorage.removeItem('llc_admin_user');
+  },
+  clear: () => {
+    localStorage.removeItem('llc_admin_token');
+    localStorage.removeItem('llc_admin_user');
+  },
+};
+
 async function req(path, opts = {}) {
+  const token = authStorage.getToken();
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(opts.headers || {}),
+  };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+
   const res = await fetch(`${API_BASE}${path}`, {
-    headers: { 'Content-Type': 'application/json' },
     ...opts,
+    headers,
   });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
@@ -37,6 +69,8 @@ export const api = {
   createFaq: (body) => req('/api/faqs', { method: 'POST', body: JSON.stringify(body) }),
   updateFaq: (id, body) => req(`/api/faqs/${id}`, { method: 'PUT', body: JSON.stringify(body) }),
   deleteFaq: (id) => req(`/api/faqs/${id}`, { method: 'DELETE' }),
+  login: (username, password) => req('/api/admin/login', { method: 'POST', body: JSON.stringify({ username, password }) }),
+  me: () => req('/api/admin/me'),
   stats: () => req('/api/admin/stats'),
   comparison: () => req('/api/comparison').then((d) => d.item),
   updateComparison: (body) => req('/api/comparison', { method: 'PUT', body: JSON.stringify(body) }),

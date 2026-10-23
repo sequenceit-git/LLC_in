@@ -1,5 +1,6 @@
 const express = require('express');
 const Faq = require('../models/Faq');
+const { requireAuth } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -14,7 +15,7 @@ router.get('/', async (req, res, next) => {
 });
 
 // GET all FAQs for admin
-router.get('/all', async (req, res, next) => {
+router.get('/all', requireAuth, async (req, res, next) => {
   try {
     const items = await Faq.find({}).sort({ order: 1, createdAt: 1 }).lean();
     res.json({ ok: true, items });
@@ -24,7 +25,7 @@ router.get('/all', async (req, res, next) => {
 });
 
 // POST create FAQ
-router.post('/', async (req, res, next) => {
+router.post('/', requireAuth, async (req, res, next) => {
   try {
     const { q, a, order = 0, isActive = true } = req.body;
     if (!q || !a) return res.status(400).json({ error: 'Question and answer are required' });
@@ -36,7 +37,7 @@ router.post('/', async (req, res, next) => {
 });
 
 // PUT update FAQ
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', requireAuth, async (req, res, next) => {
   try {
     const { q, a, order, isActive } = req.body;
     const item = await Faq.findByIdAndUpdate(
@@ -52,7 +53,7 @@ router.put('/:id', async (req, res, next) => {
 });
 
 // DELETE FAQ
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', requireAuth, async (req, res, next) => {
   try {
     const item = await Faq.findByIdAndDelete(req.params.id);
     if (!item) return res.status(404).json({ error: 'FAQ not found' });
