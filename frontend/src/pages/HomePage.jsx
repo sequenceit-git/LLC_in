@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { FiFileText, FiTag, FiClock, FiShield } from 'react-icons/fi';
+import { AiOutlineRight } from 'react-icons/ai';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import PricingGrid from '../components/PricingGrid';
@@ -69,46 +70,57 @@ export default function HomePage() {
 
       {/* Authority Section */}
       <section className="authority" aria-label="Key Service Highlights">
-        <div className="container authority-grid">
-          <div className="authority-cell">
-            <div className="authority-icon-wrap" aria-hidden="true">
-              <FiFileText />
+        <div className="container authority-row">
+          <div className="authority-item">
+            <div className="authority-icon" aria-hidden="true">
+              <FiFileText size={34} />
             </div>
-            <div className="authority-num">Section 206</div>
-            <div className="authority-label">NY LLC Law Compliance</div>
-            <p className="authority-desc">
-              Meets all New York State legal requirements for newly formed and foreign LLCs.
-            </p>
+            <div className="authority-text">
+              <strong className="authority-title">Section 206</strong>
+              <span className="authority-caption">Statutory NY Compliance</span>
+            </div>
           </div>
-          <div className="authority-cell">
-            <div className="authority-icon-wrap" aria-hidden="true">
-              <FiTag />
+
+          <span className="authority-sep" aria-hidden="true">
+            <AiOutlineRight size={22} />
+          </span>
+
+          <div className="authority-item">
+            <div className="authority-icon" aria-hidden="true">
+              <FiTag size={34} />
             </div>
-            <div className="authority-num">$349 Flat Rate</div>
-            <div className="authority-label">All-Inclusive Statewide Pricing</div>
-            <p className="authority-desc">
-              Covers both newspapers, publisher affidavits, and the mandatory $50 state filing fee.
-            </p>
+            <div className="authority-text">
+              <strong className="authority-title">$349 Flat Rate</strong>
+              <span className="authority-caption">State Filing Fee Included</span>
+            </div>
           </div>
-          <div className="authority-cell">
-            <div className="authority-icon-wrap" aria-hidden="true">
-              <FiClock />
+
+          <span className="authority-sep" aria-hidden="true">
+            <AiOutlineRight size={22} />
+          </span>
+
+          <div className="authority-item">
+            <div className="authority-icon" aria-hidden="true">
+              <FiClock size={34} />
             </div>
-            <div className="authority-num">24-Hour Notice</div>
-            <div className="authority-label">Fast Publisher Scheduling</div>
-            <p className="authority-desc">
-              Your legal notices are drafted and sent to designated county newspapers within one business day.
-            </p>
+            <div className="authority-text">
+              <strong className="authority-title">24-Hour Notice</strong>
+              <span className="authority-caption">Fast Publisher Dispatch</span>
+            </div>
           </div>
-          <div className="authority-cell">
-            <div className="authority-icon-wrap" aria-hidden="true">
-              <FiShield />
+
+          <span className="authority-sep" aria-hidden="true">
+            <AiOutlineRight size={22} />
+          </span>
+
+          <div className="authority-item">
+            <div className="authority-icon" aria-hidden="true">
+              <FiShield size={34} />
             </div>
-            <div className="authority-num">100% Acceptance</div>
-            <div className="authority-label">Guaranteed State Filing Approval</div>
-            <p className="authority-desc">
-              Zero rejections with the New York Department of State, or your money back.
-            </p>
+            <div className="authority-text">
+              <strong className="authority-title">100% Guaranteed</strong>
+              <span className="authority-caption">Albany DOS Acceptance</span>
+            </div>
           </div>
         </div>
       </section>
