@@ -30,9 +30,18 @@ export default function HomePage() {
 
       {/* Hero Section */}
       <section className="hero">
-        <div className="hero-seal" aria-hidden="true">
-          <div className="hero-seal-outer"></div>
-          <div className="hero-seal-inner"></div>
+        <div className="hero-seal-wrap" aria-hidden="true">
+          <svg className="hero-seal-svg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="100" cy="100" r="95" stroke="var(--gold)" strokeWidth="1" strokeDasharray="4 4" opacity="0.35" />
+            <circle cx="100" cy="100" r="85" stroke="var(--gold)" strokeWidth="1.5" opacity="0.55" />
+            <circle cx="100" cy="100" r="72" stroke="var(--gold)" strokeWidth="0.75" strokeDasharray="2 3" opacity="0.3" />
+            <circle cx="100" cy="100" r="58" stroke="var(--gold)" strokeWidth="1" opacity="0.5" />
+            <path d="M100 15 L104 35 L124 35 L108 47 L114 67 L100 55 L86 67 L92 47 L76 35 L96 35 Z" fill="var(--gold)" opacity="0.18" />
+            <path d="M100 185 L104 165 L124 165 L108 153 L114 133 L100 145 L86 133 L92 153 L76 165 L96 165 Z" fill="var(--gold)" opacity="0.18" />
+            <path d="M15 100 L35 104 L35 124 L47 108 L67 114 L55 100 L67 86 L47 92 L35 76 L35 96 Z" fill="var(--gold)" opacity="0.18" />
+            <path d="M185 100 L165 104 L165 124 L153 108 L133 114 L145 100 L133 86 L153 92 L165 76 L165 96 Z" fill="var(--gold)" opacity="0.18" />
+            <circle cx="100" cy="100" r="42" stroke="var(--gold)" strokeWidth="1.5" strokeDasharray="3 3" opacity="0.4" />
+          </svg>
         </div>
         <div className="container hero-grid">
           <div className="hero-copy">
@@ -53,8 +62,11 @@ export default function HomePage() {
             </div>
           </div>
           <aside className="price-card" aria-label="Starting price">
-            <div className="price-card-rule"></div>
-            <div className="price-card-eyebrow">Guaranteed Flat Tariff</div>
+            <div className="price-card-seal-badge" aria-hidden="true">NY DOS § 206</div>
+            <div className="price-card-eyebrow">
+              <span className="pulse-dot" aria-hidden="true"></span>
+              Guaranteed Flat Tariff
+            </div>
             <div className="price-card-amount">$349<span className="price-card-flat">baseline</span></div>
             <div className="price-card-note">Starting rate for most NY counties · No surprise fees</div>
             <div className="hr"></div>
@@ -138,6 +150,7 @@ export default function HomePage() {
 
           <div className="why-cards">
             <div className="why-card">
+              <span className="why-card-watermark" aria-hidden="true">01</span>
               <div className="why-card-badge">Requirement 01</div>
               <h3>Dual Periodical Designation</h3>
               <p>
@@ -145,6 +158,7 @@ export default function HomePage() {
               </p>
             </div>
             <div className="why-card">
+              <span className="why-card-watermark" aria-hidden="true">02</span>
               <div className="why-card-badge">Requirement 02</div>
               <h3>Six Successive Weeks in Print</h3>
               <p>
@@ -152,7 +166,11 @@ export default function HomePage() {
               </p>
             </div>
             <div className="why-card why-card-alert">
-              <div className="why-card-badge why-card-badge-alert">Strict Deadline</div>
+              <span className="why-card-watermark" aria-hidden="true">120D</span>
+              <div className="why-card-badge why-card-badge-alert">
+                <span className="alert-pulse-dot" aria-hidden="true"></span>
+                Strict Deadline
+              </div>
               <h3>The 120-Day Suspension Rule</h3>
               <p>
                 Both affidavits alongside a formal Certificate of Publication must be submitted to the Department of State within 120 days. Failure to comply results in automatic suspension of your business operating authority in New York.
@@ -169,26 +187,33 @@ export default function HomePage() {
             <div className="eyebrow eyebrow-light">Execution Protocol</div>
             <h2 className="display light">Four steps. <span className="italic gold">We manage the entire lifecycle.</span></h2>
           </div>
-          <div className="steps">
-            <div className="step">
-              <div className="step-row"><div className="step-num">01</div><div className="step-time">Day 1</div></div>
-              <div className="step-title">Online Intake</div>
-              <div className="step-desc">Enter your entity particulars and formation county in under two minutes via our encrypted checkout.</div>
-            </div>
-            <div className="step">
-              <div className="step-row"><div className="step-num">02</div><div className="step-time">Days 2–3</div></div>
-              <div className="step-title">Press Assignment &amp; Scheduling</div>
-              <div className="step-desc">We match clerk-designated periodicals in your county and immediately book the 6-week publication sequence.</div>
-            </div>
-            <div className="step">
-              <div className="step-row"><div className="step-num">03</div><div className="step-time">Weeks 2–7</div></div>
-              <div className="step-title">Active Print Circulation</div>
-              <div className="step-desc">Your notice appears weekly in both print editions. We monitor tearsheets across every scheduled issue.</div>
-            </div>
-            <div className="step">
-              <div className="step-row"><div className="step-num">04</div><div className="step-time">Weeks 8–9</div></div>
-              <div className="step-title">Albany DOS Filing &amp; Evidence</div>
-              <div className="step-desc">We retrieve sworn affidavits, prepare and file your Certificate of Publication, and deliver stamped proof.</div>
+          <div className="steps-wrapper">
+            <div className="steps-track" aria-hidden="true"></div>
+            <div className="steps">
+              <div className="step">
+                <div className="step-node" aria-hidden="true"></div>
+                <div className="step-row"><div className="step-num">01</div><div className="step-time">Day 1</div></div>
+                <div className="step-title">Online Intake</div>
+                <div className="step-desc">Enter your entity particulars and formation county in under two minutes via our encrypted checkout.</div>
+              </div>
+              <div className="step">
+                <div className="step-node" aria-hidden="true"></div>
+                <div className="step-row"><div className="step-num">02</div><div className="step-time">Days 2–3</div></div>
+                <div className="step-title">Press Assignment &amp; Scheduling</div>
+                <div className="step-desc">We match clerk-designated periodicals in your county and immediately book the 6-week publication sequence.</div>
+              </div>
+              <div className="step">
+                <div className="step-node" aria-hidden="true"></div>
+                <div className="step-row"><div className="step-num">03</div><div className="step-time">Weeks 2–7</div></div>
+                <div className="step-title">Active Print Circulation</div>
+                <div className="step-desc">Your notice appears weekly in both print editions. We monitor tearsheets across every scheduled issue.</div>
+              </div>
+              <div className="step">
+                <div className="step-node" aria-hidden="true"></div>
+                <div className="step-row"><div className="step-num">04</div><div className="step-time">Weeks 8–9</div></div>
+                <div className="step-title">Albany DOS Filing &amp; Evidence</div>
+                <div className="step-desc">We retrieve sworn affidavits, prepare and file your Certificate of Publication, and deliver stamped proof.</div>
+              </div>
             </div>
           </div>
           <div className="cta-row">
@@ -210,6 +235,7 @@ export default function HomePage() {
             <div className="compare-row compare-head" role="row">
               {(comparison.columns || []).map((c, i) => (
                 <div key={i} className={i === 1 ? 'compare-us' : ''} role="columnheader">
+                  {i === 1 && <span className="compare-spotlight-tag" aria-hidden="true">Statutory Standard</span>}
                   {c}
                 </div>
               ))}
@@ -249,17 +275,29 @@ export default function HomePage() {
           </div>
           <div className="testimonial-grid">
             <figure className="testimonial">
-              <div className="testimonial-stars">★★★★★</div>
+              <span className="testimonial-watermark" aria-hidden="true">&ldquo;</span>
+              <div className="testimonial-top">
+                <div className="testimonial-stars" aria-label="5 out of 5 stars">★★★★★</div>
+                <span className="testimonial-verified">✓ Verified Filing</span>
+              </div>
               <blockquote>&ldquo;Our corporate attorney quoted over $1,500 for New York County publishing. LLC Publication Online initiated the press schedule within 48 hours and had our Certificate on file with Albany in six weeks. Entirely turnkey.&rdquo;</blockquote>
               <figcaption><strong>Elena R.</strong><span>Tech Advisory LLC, Manhattan</span></figcaption>
             </figure>
             <figure className="testimonial">
-              <div className="testimonial-stars">★★★★★</div>
+              <span className="testimonial-watermark" aria-hidden="true">&ldquo;</span>
+              <div className="testimonial-top">
+                <div className="testimonial-stars" aria-label="5 out of 5 stars">★★★★★</div>
+                <span className="testimonial-verified">✓ Verified Filing</span>
+              </div>
               <blockquote>&ldquo;The transparency is what made them stand out. Three other filing services tried to tag on $100+ rush fees. Here, fast handling was standard and communication was prompt throughout.&rdquo;</blockquote>
               <figcaption><strong>Marcus T.</strong><span>Commercial Logistics LLC, Queens</span></figcaption>
             </figure>
             <figure className="testimonial">
-              <div className="testimonial-stars">★★★★★</div>
+              <span className="testimonial-watermark" aria-hidden="true">&ldquo;</span>
+              <div className="testimonial-top">
+                <div className="testimonial-stars" aria-label="5 out of 5 stars">★★★★★</div>
+                <span className="testimonial-verified">✓ Verified Filing</span>
+              </div>
               <blockquote>&ldquo;We were 10 days away from the 120-day suspension window. They coordinated with the designated county clerk newspapers immediately and completed our state filing smoothly.&rdquo;</blockquote>
               <figcaption><strong>David K.</strong><span>Capital Holdings LLC, Brooklyn</span></figcaption>
             </figure>
