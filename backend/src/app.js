@@ -15,8 +15,42 @@ const comparisonRouter = require('./routes/comparison');
 
 const app = express();
 app.set('trust proxy', 1);
-app.use(helmet());
-app.use(cors({ origin: (process.env.CORS_ORIGIN || '*').split(','), credentials: true }));
+app.use(helmet({ crossOriginResourcePolicy: false }));
+
+const explicitOrigins = (process.env.CORS_ORIGIN || '')
+  .split(',')
+  .map((s) => s.trim().replace(/\/$/, ''))
+  .filter(Boolean);
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow non-browser requests (like server-to-server or curl)
+    if (!origin) return callback(null, true);
+
+    const clean = origin.replace(/\/$/, '');
+
+    // Allow explicit origins, any vercel preview/prod app, or localhost
+    if (
+      explicitOrigins.includes(clean) ||
+      clean.endsWith('.vercel.app') ||
+      clean.startsWith('http://localhost:') ||
+      clean.startsWith('http://127.0.0.1:') ||
+      explicitOrigins.includes('*') ||
+      explicitOrigins.length === 0
+    ) {
+      return callback(null, true);
+    }
+
+    return callback(null, true);
+  },
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
+
 app.use(express.json({ limit: '1mb' }));
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 

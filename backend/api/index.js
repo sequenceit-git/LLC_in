@@ -25,6 +25,11 @@ async function ensureDB() {
 }
 
 module.exports = async (req, res) => {
+  // Let Express handle preflight CORS OPTIONS requests immediately without waiting for DB connection
+  if (req.method === 'OPTIONS') {
+    return app(req, res);
+  }
+
   try {
     await ensureDB();
   } catch (e) {
