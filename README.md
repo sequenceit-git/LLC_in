@@ -64,6 +64,43 @@ Demo data: `npm.cmd run seed:orders` inserts 24 sample orders (all `@example.com
 
 ## Production notes
 - `helmet`, `cors` allowlist via `CORS_ORIGIN`, `morgan`, rate-limit on order creation, `zod` validation, central error handler (no stack leak in production).
-- `DB_URI` already wired to Atlas (`llc_publication` db). Override in `backend/.env`.
-- Docker: `docker compose up --build` (api :5000, web :80).
+- `DB_URI` already wired to Atlas (`llc_publication` db). Configure in root `.env`.
 - Stripe: current order form records `paymentStatus: pending`; drop in Stripe PaymentIntent (frontend Elements + backend `/api/payments/intent`) before taking live cards — never post raw PAN to your API.
+
+## VPS Deployment with Traefik
+
+The project is pre-configured to deploy behind an existing Traefik reverse proxy using Docker Compose and a centralized root `.env` file.
+
+### 1. Configure the root `.env`
+Copy `.env.example` to `.env` (already created at project root) and configure your values:
+```bash
+cp .env.example .env
+```
+Key variables to check for your VPS:
+- `DOMAIN`: Your production domain (e.g. `llcpublicationonline.com`)
+- `TRAEFIK_NETWORK`: The Docker network Traefik is running on (default: `traefik_default`)
+- `TRAEFIK_ENTRYPOINT`: The Traefik HTTPS entrypoint name (default: `websecure`)
+- `TRAEFIK_CERTRESOLVER`: The Let's Encrypt resolver name defined in your Traefik setup (default: `letsencrypt`)
+- `DB_URI`: Your MongoDB Atlas connection string
+- `JWT_SECRET`: A secure random string for admin authentication
+
+### 2. Deploy with Docker Compose
+On your VPS, run:
+```bash
+docker compose up -d --build
+```
+This starts:
+- **`web`**: Nginx serving the production React build on port 80 (routed via Traefik HTTPS router `llc-web` with auto Let's Encrypt SSL and HTTP-to-HTTPS redirect).
+- **`api`**: Express backend on port 5000 (routed via Traefik router `llc-api` for `/api/*` and also proxied internally by Nginx).
+
+### 3. Seed Admin on VPS (first-time only)
+```bash
+docker compose exec api node seedAdmin.js
+```
+
+### Local Development without Traefik
+If you want to run the Docker containers locally on your development machine without Traefik:
+```bash
+docker compose -f docker-compose.local.yml up --build
+```
+This maps `web` to `http://localhost:80` and `api` to `http://localhost:5000`.

@@ -150,7 +150,7 @@ module.exports = {
 };
 
 if (require.main === module) {
-  require('dotenv').config();
+  require('./config/env');
   const connectDB = require('./config/db');
   const shouldClear = process.argv.includes('--clear');
 

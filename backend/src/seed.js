@@ -115,7 +115,7 @@ async function seed() {
 module.exports = { seed, COUNTIES, ARTICLES, INITIAL_POLICIES, FAQS, DEFAULT_COMPARISON };
 
 if (require.main === module) {
-  require('dotenv').config();
+  require('./config/env');
   const connectDB = require('./config/db');
   connectDB(process.env.DB_URI || process.env.MONGODB_URI)
     .then(seed)

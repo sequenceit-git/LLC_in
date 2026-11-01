@@ -1,4 +1,5 @@
 // Vercel serverless entry: reuses one cached Mongo connection across invocations.
+require('../src/config/env');
 const mongoose = require('mongoose');
 const app = require('../src/app');
 

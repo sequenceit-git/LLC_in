@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('./src/config/env');
 const mongoose = require('mongoose');
 const AdminUser = require('./src/models/AdminUser');
 

@@ -1,0 +1,27 @@
+# Standalone local development compose file (no Traefik required)
+# Run with: docker compose -f docker-compose.local.yml up --build
+
+services:
+  api:
+    build:
+      context: ./backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    environment:
+      - PORT=5000
+      - NODE_ENV=development
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+    env_file:
+      - .env
+    restart: unless-stopped
+
