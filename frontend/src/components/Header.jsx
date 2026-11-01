@@ -13,7 +13,7 @@ export default function Header() {
           <img src="/logo.png" alt="LLC Publication Online" className="brand-logo-img" />
           <div className="brand-text">
             <div className="brand-name">LLC Publication</div>
-            <div className="brand-tag">Online · New York</div>
+            <div className="brand-tag">New York</div>
           </div>
         </Link>
         <button
