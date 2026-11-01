@@ -1,4 +1,12 @@
-const API_BASE = import.meta.env.VITE_API_URL || '';
+const rawApi = import.meta.env.VITE_API_URL || '';
+// Guard: In production on a real domain, never call localhost
+const API_BASE =
+  typeof window !== 'undefined' &&
+  rawApi.includes('localhost') &&
+  window.location.hostname !== 'localhost' &&
+  window.location.hostname !== '127.0.0.1'
+    ? ''
+    : rawApi;
 
 export const authStorage = {
   getToken: () => localStorage.getItem('llc_admin_token') || '',
