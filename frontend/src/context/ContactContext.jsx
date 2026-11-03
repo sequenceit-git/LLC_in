@@ -49,3 +49,4 @@ export function ContactProvider({ children }) {
 export function useContact() {
   return useContext(ContactContext);
 }
+

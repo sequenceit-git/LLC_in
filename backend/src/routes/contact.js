@@ -72,3 +72,4 @@ router.post('/reset', requireAuth, async (req, res, next) => {
 
 module.exports = router;
 module.exports.DEFAULT_CONTACT = DEFAULT_CONTACT;
+
