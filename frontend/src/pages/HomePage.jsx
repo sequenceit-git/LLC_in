@@ -6,6 +6,7 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import PricingGrid from '../components/PricingGrid';
 import OrderForm from '../components/OrderForm';
+import SEO from '../components/SEO';
 import { useLanguage } from '../context/LanguageContext';
 import { api } from '../api';
 import { FALLBACK_PRICES, FALLBACK_COMPARISON, FAQS } from '../data/seed';
@@ -36,8 +37,55 @@ export default function HomePage() {
     return valid.length ? Math.min(...valid) : 349;
   }, [prices]);
 
+  const homeSchema = useMemo(
+    () => ({
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'LegalService',
+          '@id': 'https://llcpublications.com/#service',
+          name: 'LLC Publications Online',
+          url: 'https://llcpublications.com',
+          logo: 'https://llcpublications.com/logo.png',
+          image: 'https://llcpublications.com/logo.png',
+          description:
+            'Affordable New York LLC newspaper publication service under Section 206. We coordinate county clerk designated newspapers, secure affidavits of publication, and file Certificates of Publication with the NY Department of State.',
+          priceRange: '$349 - $1349',
+          areaServed: {
+            '@type': 'State',
+            name: 'New York',
+          },
+          address: {
+            '@type': 'PostalAddress',
+            addressRegion: 'NY',
+            addressCountry: 'US',
+          },
+        },
+        {
+          '@type': 'FAQPage',
+          '@id': 'https://llcpublications.com/#faq',
+          mainEntity: (faqs || []).map((f) => ({
+            '@type': 'Question',
+            name: f.q,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: f.a,
+            },
+          })),
+        },
+      ],
+    }),
+    [faqs]
+  );
+
   return (
     <>
+      <SEO
+        title="LLC Publication New York — Cheap LLC Publication NY | Section 206"
+        description="The lowest-priced LLC publication service in NY. We satisfy Section 206, arrange both newspapers, and file your Certificate of Publication with NY DOS. From $349 flat."
+        canonical="/"
+        schema={homeSchema}
+      />
       <Header />
 
       {/* Hero Section */}

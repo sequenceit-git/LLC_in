@@ -29,10 +29,9 @@ const corsOptions = {
 
     const clean = origin.replace(/\/$/, '');
 
-    // Allow explicit origins, any vercel preview/prod app, or localhost
+    // Allow explicit origins or localhost
     if (
       explicitOrigins.includes(clean) ||
-      clean.endsWith('.vercel.app') ||
       clean.startsWith('http://localhost:') ||
       clean.startsWith('http://127.0.0.1:') ||
       explicitOrigins.includes('*') ||

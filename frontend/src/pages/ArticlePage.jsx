@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import SEO from '../components/SEO';
 import { api } from '../api';
 import { FALLBACK_ARTICLES } from '../data/seed';
 
@@ -24,8 +25,66 @@ export default function ArticlePage() {
   const title = article?.title || 'Loading…';
   const titleBreak = ' in New York?';
 
+  const articleSchema = article
+    ? {
+        '@context': 'https://schema.org',
+        '@graph': [
+          {
+            '@type': 'Article',
+            headline: article.title,
+            description: article.excerpt || '',
+            url: `https://llcpublications.com/resources/${slug}`,
+            datePublished: article.createdAt || '2026-01-01',
+            dateModified: article.updatedAt || '2026-11-03',
+            publisher: {
+              '@type': 'Organization',
+              name: 'LLC Publications Online',
+              logo: {
+                '@type': 'ImageObject',
+                url: 'https://llcpublications.com/logo.png',
+              },
+            },
+            mainEntityOfPage: {
+              '@type': 'WebPage',
+              '@id': `https://llcpublications.com/resources/${slug}`,
+            },
+          },
+          {
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              {
+                '@type': 'ListItem',
+                position: 1,
+                name: 'Home',
+                item: 'https://llcpublications.com/',
+              },
+              {
+                '@type': 'ListItem',
+                position: 2,
+                name: 'Resources',
+                item: 'https://llcpublications.com/resources',
+              },
+              {
+                '@type': 'ListItem',
+                position: 3,
+                name: article.title,
+                item: `https://llcpublications.com/resources/${slug}`,
+              },
+            ],
+          },
+        ],
+      }
+    : null;
+
   return (
     <>
+      <SEO
+        title={article?.title || 'LLC Publication Guide'}
+        description={article?.excerpt || 'New York LLC newspaper publication guide.'}
+        canonical={`/resources/${slug}`}
+        ogType="article"
+        schema={articleSchema}
+      />
       <Header />
       <section className="page-hero">
         <div className="container">

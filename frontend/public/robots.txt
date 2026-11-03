@@ -1,0 +1,20 @@
+# robots.txt for https://llcpublications.com
+
+User-agent: *
+Allow: /
+Allow: /resources
+Allow: /resources/*
+Allow: /privacy-policy
+Allow: /terms-of-use
+Allow: /refund-cancellation-policy
+Allow: /accessibility-statement
+Allow: /sitemap
+
+# Disallow private admin management and backend endpoints
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /api/admin
+Disallow: /api/admin/*
+
+# XML Sitemap
+Sitemap: https://llcpublications.com/sitemap.xml

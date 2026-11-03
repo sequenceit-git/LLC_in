@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import SEO from '../components/SEO';
 import { api } from '../api';
 import { FALLBACK_POLICIES } from '../data/seed';
 
@@ -33,6 +34,11 @@ export default function PolicyPage({ slug: propSlug }) {
 
   return (
     <>
+      <SEO
+        title={title}
+        description={`${title} for LLC Publications Online — Section 206 New York legal compliance and publishing service.`}
+        canonical={slug.startsWith('policy/') ? `/${slug}` : `/${slug}`}
+      />
       <Header />
       <main className="policy">
         <div className="container policy-container">

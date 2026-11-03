@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import SEO from '../components/SEO';
 import { api } from '../api';
 import { FALLBACK_ARTICLES } from '../data/seed';
 
@@ -18,8 +19,23 @@ export default function ResourcesPage() {
   const tags = ['All', ...new Set(articles.map((a) => a.tag).filter(Boolean))];
   const displayedArticles = activeTag === 'All' ? articles : articles.filter((a) => a.tag === activeTag);
 
+  const resourcesSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: 'New York LLC Publication Guides & Legal Resources',
+    description:
+      'Plain-English guides written for New York founders — covering Section 206, newspaper publication rules, county costs, and Certificate of Publication filing.',
+    url: 'https://llcpublications.com/resources',
+  };
+
   return (
     <>
+      <SEO
+        title="New York LLC Publication Resources & Legal Guides"
+        description="Comprehensive guides for NY founders: Section 206 compliance, publication costs by county, notice examples, and Certificate of Publication filing."
+        canonical="/resources"
+        schema={resourcesSchema}
+      />
       <Header />
       <section className="page-hero">
         <div className="hero-seal-wrap" aria-hidden="true">
