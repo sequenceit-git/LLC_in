@@ -83,4 +83,7 @@ export const api = {
   comparison: () => req('/api/comparison').then((d) => d.item),
   updateComparison: (body) => req('/api/comparison', { method: 'PUT', body: JSON.stringify(body) }),
   resetComparison: () => req('/api/comparison/reset', { method: 'POST' }),
+  contact: () => req('/api/contact').then((d) => d.item),
+  updateContact: (body) => req('/api/contact', { method: 'PUT', body: JSON.stringify(body) }).then((d) => d.item),
+  resetContact: () => req('/api/contact/reset', { method: 'POST' }).then((d) => d.item),
 };

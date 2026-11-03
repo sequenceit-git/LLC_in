@@ -3,8 +3,10 @@ const Article = require('./models/Article');
 const Policy = require('./models/Policy');
 const Faq = require('./models/Faq');
 const Comparison = require('./models/Comparison');
+const ContactInfo = require('./models/ContactInfo');
 const { INITIAL_POLICIES } = require('./data/initialPolicies');
 const { DEFAULT_COMPARISON } = require('./data/initialComparison');
+const { DEFAULT_CONTACT } = require('./routes/contact');
 
 // 1:1 county pricing extracted from the live site (flat all-inclusive fees)
 // Foreign pricing includes standard newspaper notice surcharge (+20 to +50 depending on county)
@@ -109,7 +111,12 @@ async function seed() {
     { $set: DEFAULT_COMPARISON, $setOnInsert: { key: 'home-comparison' } },
     { upsert: true }
   );
-  console.log(`Seeded ${COUNTIES.length} counties + ${ARTICLES.length} articles + ${INITIAL_POLICIES.length} policies + ${FAQS.length} FAQs + 1 comparison block`);
+  await ContactInfo.updateOne(
+    { key: 'site-contact' },
+    { $setOnInsert: { key: 'site-contact', ...DEFAULT_CONTACT } },
+    { upsert: true }
+  );
+  console.log(`Seeded ${COUNTIES.length} counties + ${ARTICLES.length} articles + ${INITIAL_POLICIES.length} policies + ${FAQS.length} FAQs + 1 comparison block + contact info`);
 }
 
 module.exports = { seed, COUNTIES, ARTICLES, INITIAL_POLICIES, FAQS, DEFAULT_COMPARISON };

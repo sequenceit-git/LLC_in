@@ -4,6 +4,7 @@ import { api } from '../api';
 import { fmt, FALLBACK_POLICIES, FALLBACK_COMPARISON, FAQS } from '../data/seed';
 import RowMenu from '../components/RowMenu';
 import { useAuth } from '../context/AuthContext';
+import { useContact, DEFAULT_CONTACT } from '../context/ContactContext';
 import AdminLogin from '../components/AdminLogin';
 
 const NAV = [
@@ -13,6 +14,7 @@ const NAV = [
   { id: 'statements', label: 'Statements', icon: '§' },
   { id: 'comparison', label: 'Comparison', icon: '⇄' },
   { id: 'faqs', label: 'FAQs', icon: '?' },
+  { id: 'contact', label: 'Contact Info', icon: '✉' },
 ];
 
 const TAB_IDS = NAV.map((n) => n.id);
@@ -137,6 +139,7 @@ export default function AdminPage() {
         {tab === 'statements' && <StatementsPanel />}
         {tab === 'comparison' && <ComparisonPanel />}
         {tab === 'faqs' && <FaqsPanel />}
+        {tab === 'contact' && <ContactPanel />}
       </main>
     </div>
   );
@@ -1290,6 +1293,241 @@ function ComparisonPanel() {
               {error}
             </span>
           )}
+        </div>
+      </form>
+    </div>
+  );
+}
+
+function ContactPanel() {
+  const { setContactState } = useContact();
+  const [form, setForm] = useState(DEFAULT_CONTACT);
+  const [loaded, setLoaded] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState('');
+  const [error, setError] = useState('');
+
+  const apply = (item) => {
+    if (!item) return;
+    setForm({
+      email: item.email ?? DEFAULT_CONTACT.email,
+      phone: item.phone ?? DEFAULT_CONTACT.phone,
+      hours: item.hours ?? DEFAULT_CONTACT.hours,
+      address: item.address ?? DEFAULT_CONTACT.address,
+      portalUrl: item.portalUrl ?? DEFAULT_CONTACT.portalUrl,
+      legalName: item.legalName ?? DEFAULT_CONTACT.legalName,
+      notice: item.notice ?? DEFAULT_CONTACT.notice,
+    });
+  };
+
+  const load = () => {
+    api
+      .contact()
+      .then((item) => apply(item))
+      .catch((err) => setError(err.message || 'Could not load contact info'))
+      .finally(() => setLoaded(true));
+  };
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setBusy(true);
+    setMsg('');
+    setError('');
+    try {
+      const updated = await api.updateContact(form);
+      apply(updated);
+      setContactState((prev) => ({ ...prev, ...updated }));
+      setMsg('Contact details updated successfully.');
+      setTimeout(() => setMsg(''), 4000);
+    } catch (err) {
+      setError(err.message || 'Save failed');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const reset = async () => {
+    if (!window.confirm('Reset all contact channels and details to system defaults?')) return;
+    setBusy(true);
+    setMsg('');
+    setError('');
+    try {
+      const res = await api.resetContact();
+      apply(res);
+      setContactState((prev) => ({ ...prev, ...res }));
+      setMsg('Contact info restored to default settings.');
+      setTimeout(() => setMsg(''), 4000);
+    } catch (err) {
+      setError(err.message || 'Reset failed');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  if (!loaded) {
+    return (
+      <div className="panel">
+        <p className="panel-desc">Loading contact details…</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="panel">
+      <h3>Contact Information &amp; Support Channels</h3>
+      <p className="panel-desc">
+        Manage customer support channels, phone numbers, email addresses, business hours, and portal links.
+        Updates saved here will automatically display across the live website footer, schema, and legal notices.
+      </p>
+
+      {/* Live Preview Card */}
+      <div className="compare-preview">
+        <div className="compare-preview-bar">
+          <span className="compare-preview-title">Live preview</span>
+          <span className="compare-preview-hint">
+            How this contact information appears to visitors in the website footer and support sections.
+          </span>
+        </div>
+        <div style={{ padding: '24px', background: '#0B1F3A', borderRadius: '4px', color: '#FAF7F1' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', maxWidth: '380px' }}>
+            <div style={{ fontFamily: 'var(--sans)', fontSize: '11px', letterSpacing: '2px', textTransform: 'uppercase', color: 'var(--gold)', fontWeight: '700' }}>
+              Contact &amp; Support
+            </div>
+            <a href={`mailto:${form.email}`} style={{ color: 'var(--paper)', textDecoration: 'none', fontWeight: '600' }}>
+              ✉ {form.email || 'support@yourdomain.com'}
+            </a>
+            <a href={`tel:${form.phone}`} style={{ color: 'var(--paper)', textDecoration: 'none', fontWeight: '600' }}>
+              ☎ {form.phone || '(888) 000-0000'}
+            </a>
+            <div style={{ fontSize: '12px', opacity: 0.7, marginTop: '4px' }}>
+              ⏰ Operating Hours: {form.hours || 'M–F · 8a–6p ET'}
+            </div>
+            <div style={{ fontSize: '12px', opacity: 0.7 }}>
+              📍 Office: {form.address || 'New York, NY'}
+            </div>
+            {form.notice && (
+              <div style={{ fontSize: '11.5px', color: 'var(--gold)', fontStyle: 'italic', marginTop: '6px' }}>
+                ℹ {form.notice}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <form onSubmit={handleSubmit} style={{ marginTop: '24px' }}>
+        <h4 style={{ margin: '0 0 16px', fontSize: '14px', letterSpacing: '1px', textTransform: 'uppercase', color: 'var(--navy)' }}>
+          Direct Communication
+        </h4>
+        <div className="two-col">
+          <div>
+            <label style={{ display: 'block', marginBottom: '6px', fontSize: '12px', fontWeight: '600', color: 'var(--navy)' }}>
+              Support Email Address
+            </label>
+            <input
+              type="email"
+              placeholder="e.g. info@llcpublications.com"
+              value={form.email}
+              onChange={(e) => set('email', e.target.value)}
+              required
+            />
+          </div>
+          <div>
+            <label style={{ display: 'block', marginBottom: '6px', fontSize: '12px', fontWeight: '600', color: 'var(--navy)' }}>
+              Customer Support Phone
+            </label>
+            <input
+              type="text"
+              placeholder="e.g. (888) 484-2204"
+              value={form.phone}
+              onChange={(e) => set('phone', e.target.value)}
+              required
+            />
+          </div>
+        </div>
+
+        <h4 style={{ margin: '24px 0 16px', fontSize: '14px', letterSpacing: '1px', textTransform: 'uppercase', color: 'var(--navy)' }}>
+          Operating Schedule &amp; Physical Location
+        </h4>
+        <div className="two-col">
+          <div>
+            <label style={{ display: 'block', marginBottom: '6px', fontSize: '12px', fontWeight: '600', color: 'var(--navy)' }}>
+              Business Operating Hours
+            </label>
+            <input
+              type="text"
+              placeholder="e.g. M–F · 8a–6p ET"
+              value={form.hours}
+              onChange={(e) => set('hours', e.target.value)}
+            />
+          </div>
+          <div>
+            <label style={{ display: 'block', marginBottom: '6px', fontSize: '12px', fontWeight: '600', color: 'var(--navy)' }}>
+              City &amp; State / Mailing Address
+            </label>
+            <input
+              type="text"
+              placeholder="e.g. New York, NY"
+              value={form.address}
+              onChange={(e) => set('address', e.target.value)}
+            />
+          </div>
+        </div>
+
+        <h4 style={{ margin: '24px 0 16px', fontSize: '14px', letterSpacing: '1px', textTransform: 'uppercase', color: 'var(--navy)' }}>
+          Brand Identity &amp; Portal
+        </h4>
+        <div className="two-col">
+          <div>
+            <label style={{ display: 'block', marginBottom: '6px', fontSize: '12px', fontWeight: '600', color: 'var(--navy)' }}>
+              Brand / Legal Entity Name
+            </label>
+            <input
+              type="text"
+              placeholder="e.g. LLC Publications Online"
+              value={form.legalName}
+              onChange={(e) => set('legalName', e.target.value)}
+            />
+          </div>
+          <div>
+            <label style={{ display: 'block', marginBottom: '6px', fontSize: '12px', fontWeight: '600', color: 'var(--navy)' }}>
+              Order Tracking / Client Portal URL
+            </label>
+            <input
+              type="url"
+              placeholder="e.g. https://portal.llcpublicationonline.com/"
+              value={form.portalUrl}
+              onChange={(e) => set('portalUrl', e.target.value)}
+            />
+          </div>
+        </div>
+
+        <div style={{ marginTop: '16px' }}>
+          <label style={{ display: 'block', marginBottom: '6px', fontSize: '12px', fontWeight: '600', color: 'var(--navy)' }}>
+            Support SLA / Public Response Note
+          </label>
+          <input
+            type="text"
+            placeholder="e.g. Customer support inquiries are typically answered within 24 business hours."
+            value={form.notice}
+            onChange={(e) => set('notice', e.target.value)}
+          />
+        </div>
+
+        <div className="toolbar" style={{ marginTop: '24px' }}>
+          <button className="btn btn-navy" type="submit" disabled={busy}>
+            {busy ? 'Saving…' : 'Save contact information'}
+          </button>
+          <button type="button" className="small-btn" onClick={reset} disabled={busy}>
+            Restore defaults
+          </button>
+          {msg && <span className="admin-msg-success">{msg}</span>}
+          {error && <span className="admin-msg-error">{error}</span>}
         </div>
       </form>
     </div>

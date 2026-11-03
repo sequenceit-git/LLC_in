@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
+import { useContact } from '../context/ContactContext';
 
 export default function Footer() {
   const { t } = useLanguage();
+  const { contact } = useContact();
 
   return (
     <footer className="footer">
@@ -26,7 +28,7 @@ export default function Footer() {
             <a href="/#pricing">{t('nav', 'pricing')}</a>
             <a href="/#faq">{t('nav', 'faq')}</a>
             <Link to="/resources">{t('nav', 'resources')}</Link>
-            <a href="https://portal.llcpublicationonline.com/" target="_blank" rel="noopener noreferrer">
+            <a href={contact.portalUrl || 'https://portal.llcpublicationonline.com/'} target="_blank" rel="noopener noreferrer">
               {t('footer', 'trackOrder')}
             </a>
           </div>
@@ -40,16 +42,17 @@ export default function Footer() {
           </div>
           <div>
             <div className="footer-eyebrow">{t('footer', 'colContact')}</div>
-            <a href="mailto:info@LLCPublicationOnline.com">info@LLCPublicationOnline.com</a>
-            <a href="tel:+18884842204">(888) 484-2204</a>
-            <span className="footer-hours">{t('footer', 'hours')}</span>
+            <a href={`mailto:${contact.email || 'info@llcpublications.com'}`}>{contact.email || 'info@llcpublications.com'}</a>
+            <a href={`tel:${(contact.phone || '(888) 484-2204').replace(/[^0-9+]/g, '')}`}>{contact.phone || '(888) 484-2204'}</a>
+            <span className="footer-hours">{contact.hours || t('footer', 'hours')}</span>
+            {contact.address && <span className="footer-hours">{contact.address}</span>}
           </div>
         </div>
         <div className="footer-disclaimer">
           {t('footer', 'disclaimer')}
         </div>
         <div className="footer-bottom">
-          <div>© 2026 LLC Publication Online. {t('footer', 'rights')}</div>
+          <div>© {new Date().getFullYear()} {contact.legalName || 'LLC Publication Online'}. {t('footer', 'rights')}</div>
         </div>
       </div>
     </footer>

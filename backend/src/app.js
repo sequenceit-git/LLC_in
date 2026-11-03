@@ -12,6 +12,7 @@ const adminRouter = require('./routes/admin');
 const policiesRouter = require('./routes/policies');
 const faqsRouter = require('./routes/faqs');
 const comparisonRouter = require('./routes/comparison');
+const contactRouter = require('./routes/contact');
 
 const app = express();
 app.set('trust proxy', 1);
@@ -70,6 +71,7 @@ app.get('/', (req, res) =>
       '/api/policies',
       '/api/faqs',
       '/api/comparison',
+      '/api/contact',
       '/api/admin/stats',
     ],
   })
@@ -81,6 +83,7 @@ app.use('/api/articles', articlesRouter);
 app.use('/api/policies', policiesRouter);
 app.use('/api/faqs', faqsRouter);
 app.use('/api/comparison', comparisonRouter);
+app.use('/api/contact', contactRouter);
 app.use('/api/admin', adminRouter);
 
 app.use(notFound);
