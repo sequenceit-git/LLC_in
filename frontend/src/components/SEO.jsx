@@ -62,6 +62,8 @@ export default function SEO({
         : `${DEFAULT_DOMAIN}${canonical.startsWith('/') ? canonical : `/${canonical}`}`
       : `${DEFAULT_DOMAIN}${window.location.pathname}`;
     setCanonical(fullCanonical);
+    // Static route-specific tags are served to crawlers; React updates them after navigation.
+    setMetaTag('name', 'robots', 'index, follow, max-image-preview:large');
 
     // 3. Meta Description
     if (description) {
