@@ -61,9 +61,9 @@ export default function AdminPage() {
     <div className="admin-wrap">
       <aside className={`admin-sidebar ${menuOpen ? 'open' : ''}`}>
         <Link to="/" className="admin-brand">
-          <img src="/logo.png" alt="LLC Publication Online" className="admin-brand-img" />
+          <img src="/logo.png" alt="LLC Publications" className="admin-brand-img" />
           <span className="admin-brand-text">
-            <span className="admin-brand-name">LLC Publication</span>
+            <span className="admin-brand-name">LLC Publications</span>
             <span className="admin-brand-tag">Admin Console</span>
           </span>
         </Link>
@@ -108,7 +108,7 @@ export default function AdminPage() {
           </button>
           <div>
             <h1 className="admin-page-title">{current?.label || 'Dashboard'}</h1>
-            <div className="admin-page-sub">Admin console · LLC Publication Online</div>
+            <div className="admin-page-sub">Admin console · LLC Publications</div>
           </div>
         </div>
 
@@ -637,7 +637,7 @@ function StatementsPanel() {
     setForm({
       slug: item.slug,
       title: item.title,
-      meta: item.meta || 'Last updated: May 2026 · LLC Publication Online',
+      meta: item.meta || 'Last updated: May 2026 · LLC Publications',
       contentHtml: item.contentHtml || '',
       category: item.category || 'legal',
     });
@@ -1489,7 +1489,7 @@ function ContactPanel() {
             </label>
             <input
               type="text"
-              placeholder="e.g. LLC Publications Online"
+              placeholder="e.g. LLC Publications"
               value={form.legalName}
               onChange={(e) => set('legalName', e.target.value)}
             />
@@ -1500,7 +1500,7 @@ function ContactPanel() {
             </label>
             <input
               type="url"
-              placeholder="e.g. https://portal.llcpublicationonline.com/"
+              placeholder="e.g. https://portal.llcpublications.com/"
               value={form.portalUrl}
               onChange={(e) => set('portalUrl', e.target.value)}
             />

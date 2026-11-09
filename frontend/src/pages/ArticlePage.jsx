@@ -38,7 +38,7 @@ export default function ArticlePage() {
             dateModified: article.updatedAt || '2026-11-03',
             publisher: {
               '@type': 'Organization',
-              name: 'LLC Publications Online',
+              name: 'LLC Publications',
               logo: {
                 '@type': 'ImageObject',
                 url: 'https://llcpublications.com/logo.png',
@@ -144,7 +144,7 @@ export default function ArticlePage() {
 
               <div className="article-cta">
                 <h3>Ready to complete your New York LLC publication?</h3>
-                <p>Start your order with LLC Publication Online today.</p>
+                <p>Start your order with LLC Publications today.</p>
                 <a href="/#order" className="btn btn-gold">
                   Start Your LLC Publication →
                 </a>
@@ -152,7 +152,7 @@ export default function ArticlePage() {
 
               <p style={{ marginTop: 32, fontSize: 14, color: 'var(--ink-60)', fontFamily: 'var(--sans)' }}>
                 <strong>Disclaimer:</strong> This article is for general informational purposes only and
-                does not constitute legal advice. LLC Publication Online is not a law firm and is not
+                does not constitute legal advice. LLC Publications is not a law firm and is not
                 affiliated with the New York Department of State or any government agency. For advice about
                 your specific situation, consult a licensed attorney.
               </p>

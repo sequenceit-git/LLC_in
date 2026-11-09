@@ -1,10 +1,10 @@
-# LLC Publication Online — Production-Grade MERN
+# LLC Publications — Production-Grade MERN
 
-Pixel-faithful rebuild of `llcpublicationonline.com` (Home, Resources, Article) + production API + Admin panel.
+Rebuild of `llcpublications.com` (Home, Resources, Article) + production API + Admin panel.
 
 ## Structure
 ```
-llc-publication-online/
+llc-publications/
   backend/   Express + Mongoose API (orders, county pricing, articles, admin stats)
   frontend/  React + Vite (Home /, Resources /resources, Article /resources/:slug, Admin /admin)
   docker-compose.yml
@@ -77,7 +77,7 @@ Copy `.env.example` to `.env` (already created at project root) and configure yo
 cp .env.example .env
 ```
 Key variables to check for your VPS:
-- `DOMAIN`: Your production domain (e.g. `llcpublicationonline.com`)
+- `DOMAIN`: Your production domain (e.g. `llcpublications.com`)
 - `TRAEFIK_NETWORK`: The Docker network Traefik is running on (default: `traefik_default`)
 - `TRAEFIK_ENTRYPOINT`: The Traefik HTTPS entrypoint name (default: `websecure`)
 - `TRAEFIK_CERTRESOLVER`: The Let's Encrypt resolver name defined in your Traefik setup (default: `letsencrypt`)

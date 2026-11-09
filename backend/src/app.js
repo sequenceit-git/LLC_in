@@ -61,7 +61,7 @@ app.use('/api/orders', (req, res, next) => (req.method === 'POST' ? orderLimiter
 app.get('/', (req, res) =>
   res.json({
     ok: true,
-    name: 'LLC Publication Online API',
+    name: 'LLC Publications API',
     version: '1.0.0',
     endpoints: [
       '/api/health',

@@ -44,7 +44,7 @@ export default function HomePage() {
         {
           '@type': 'LegalService',
           '@id': 'https://llcpublications.com/#service',
-          name: 'LLC Publications Online',
+          name: 'LLC Publications',
           url: 'https://llcpublications.com',
           logo: 'https://llcpublications.com/logo.png',
           image: 'https://llcpublications.com/logo.png',
@@ -343,7 +343,7 @@ export default function HomePage() {
                 <div className="testimonial-stars" aria-label="5 out of 5 stars">★★★★★</div>
                 <span className="testimonial-verified">{t('testimonials', 'verified')}</span>
               </div>
-              <blockquote>&ldquo;Our corporate attorney quoted over $1,500 for New York County publishing. LLC Publication Online initiated the press schedule within 48 hours and had our Certificate on file with Albany in six weeks. Entirely turnkey.&rdquo;</blockquote>
+              <blockquote>&ldquo;Our corporate attorney quoted over $1,500 for New York County publishing. LLC Publications initiated the press schedule within 48 hours and had our Certificate on file with Albany in six weeks. Entirely turnkey.&rdquo;</blockquote>
               <figcaption><strong>Elena R.</strong><span>Tech Advisory LLC, Manhattan</span></figcaption>
             </figure>
             <figure className="testimonial">

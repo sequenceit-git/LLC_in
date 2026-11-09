@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 
-const SITE_NAME = 'LLC Publications Online';
+const SITE_NAME = 'LLC Publications';
 const DEFAULT_DOMAIN = 'https://llcpublications.com';
 const DEFAULT_IMAGE = `${DEFAULT_DOMAIN}/logo.png`;
 

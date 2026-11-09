@@ -1,7 +1,7 @@
 {
   "name": "llc-publication-backend",
   "version": "1.0.0",
-  "description": "Production-grade API for LLC Publication Online (NY Section 206 compliance service)",
+  "description": "Production-grade API for LLC Publications (NY Section 206 compliance service)",
   "main": "src/server.js",
   "scripts": {
     "dev": "node --watch src/server.js",

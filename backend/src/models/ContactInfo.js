@@ -8,8 +8,8 @@ const contactInfoSchema = new mongoose.Schema(
     phone: { type: String, default: '(888) 484-2204', trim: true },
     hours: { type: String, default: 'M–F · 8a–6p ET', trim: true },
     address: { type: String, default: 'New York, NY', trim: true },
-    portalUrl: { type: String, default: 'https://portal.llcpublicationonline.com/', trim: true },
-    legalName: { type: String, default: 'LLC Publications Online', trim: true },
+    portalUrl: { type: String, default: 'https://portal.llcpublications.com/', trim: true },
+    legalName: { type: String, default: 'LLC Publications', trim: true },
     notice: {
       type: String,
       default: 'Customer support inquiries are typically answered within 24 business hours.',

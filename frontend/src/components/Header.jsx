@@ -9,10 +9,10 @@ export default function Header() {
   return (
     <header className="site-header" id="top">
       <div className="container nav-container">
-        <Link to="/" className="brand" aria-label="LLC Publication Online — Home">
-          <img src="/logo.png" alt="LLC Publication Online" className="brand-logo-img" />
+        <Link to="/" className="brand" aria-label="LLC Publications — Home">
+          <img src="/logo.png" alt="LLC Publications" className="brand-logo-img" />
           <div className="brand-text">
-            <div className="brand-name">LLC Publication</div>
+            <div className="brand-name">LLC Publications</div>
             <div className="brand-tag">New York</div>
           </div>
         </Link>

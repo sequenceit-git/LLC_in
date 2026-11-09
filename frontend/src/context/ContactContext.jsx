@@ -6,8 +6,8 @@ export const DEFAULT_CONTACT = {
   phone: '(888) 484-2204',
   hours: 'M–F · 8a–6p ET',
   address: 'New York, NY',
-  portalUrl: 'https://portal.llcpublicationonline.com/',
-  legalName: 'LLC Publications Online',
+  portalUrl: 'https://portal.llcpublications.com/',
+  legalName: 'LLC Publications',
   notice: 'Customer support inquiries are typically answered within 24 business hours.',
 };
 

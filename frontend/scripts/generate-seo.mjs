@@ -16,24 +16,24 @@ const esc = (s) => s.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceA
 
 const special = {
   '/': [
-    'New York LLC Publication Service | LLC Publications Online',
+    'New York LLC Publication Service | LLC Publications',
     'New York LLC publication assistance: newspaper notices, affidavits and Certificate of Publication filing support. Request pricing by county.',
   ],
   '/resources': [
-    'New York LLC Publication Resources | LLC Publications Online',
+    'New York LLC Publication Resources | LLC Publications',
     'Guides to New York LLC newspaper publication, Section 206 requirements, filing steps, and county costs.',
   ],
-  '/privacy-policy': ['Privacy Policy | LLC Publications Online', 'Read the privacy policy for LLC Publications Online.'],
-  '/terms-of-use': ['Terms of Use | LLC Publications Online', 'Read the terms of use for LLC Publications Online.'],
+  '/privacy-policy': ['Privacy Policy | LLC Publications', 'Read the privacy policy for LLC Publications.'],
+  '/terms-of-use': ['Terms of Use | LLC Publications', 'Read the terms of use for LLC Publications.'],
   '/refund-cancellation-policy': [
-    'Refund and Cancellation Policy | LLC Publications Online',
-    'Read the refund and cancellation policy for LLC Publications Online.',
+    'Refund and Cancellation Policy | LLC Publications',
+    'Read the refund and cancellation policy for LLC Publications.',
   ],
   '/accessibility-statement': [
-    'Accessibility Statement | LLC Publications Online',
-    'Read the accessibility statement for LLC Publications Online.',
+    'Accessibility Statement | LLC Publications',
+    'Read the accessibility statement for LLC Publications.',
   ],
-  '/sitemap': ['Website Sitemap | LLC Publications Online', 'Browse the pages and resources available on LLC Publications Online.'],
+  '/sitemap': ['Website Sitemap | LLC Publications', 'Browse the pages and resources available on LLC Publications.'],
 };
 
 const seoDir = path.join(distPath, 'seo');
@@ -50,7 +50,7 @@ for (const url of urls) {
     .join(' ');
 
   const [title, desc] = special[route] || [
-    titleText + ' | LLC Publications Online',
+    titleText + ' | LLC Publications',
     'Learn about ' + titleText.toLowerCase() + ', New York LLC publication requirements and related filing steps.',
   ];
 

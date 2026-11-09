@@ -3,7 +3,7 @@ const DEFAULT_COMPARISON = {
   eyebrow: 'The Comparison',
   heading: 'Lower prices. Faster filings.',
   headingAccent: 'No surprises.',
-  columns: ['', 'LLC Publication Online', 'Other Competitors'],
+  columns: ['', 'LLC Publications', 'Other Competitors'],
   rows: [
     { label: 'Starting price (most counties)', us: '$349', them: '$395–$499' },
     { label: 'Expedite fee', us: 'None', them: '+$75–$99' },

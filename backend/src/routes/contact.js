@@ -10,8 +10,8 @@ const DEFAULT_CONTACT = {
   phone: '(888) 484-2204',
   hours: 'M–F · 8a–6p ET',
   address: 'New York, NY',
-  portalUrl: 'https://portal.llcpublicationonline.com/',
-  legalName: 'LLC Publications Online',
+  portalUrl: 'https://portal.llcpublications.com/',
+  legalName: 'LLC Publications',
   notice: 'Customer support inquiries are typically answered within 24 business hours.',
 };
 
@@ -34,6 +34,20 @@ router.get('/', async (req, res, next) => {
     if (!item) {
       const created = await ContactInfo.create({ key: KEY, ...DEFAULT_CONTACT });
       item = created.toObject();
+    } else if (
+      item.legalName === 'LLC Publications Online' ||
+      item.legalName === 'LLC Publication Online' ||
+      item.portalUrl === 'https://portal.llcpublicationonline.com/'
+    ) {
+      const updates = {};
+      if (item.legalName === 'LLC Publications Online' || item.legalName === 'LLC Publication Online') {
+        updates.legalName = 'LLC Publications';
+      }
+      if (item.portalUrl === 'https://portal.llcpublicationonline.com/') {
+        updates.portalUrl = 'https://portal.llcpublications.com/';
+      }
+      await ContactInfo.updateOne({ key: KEY }, { $set: updates });
+      item = { ...item, ...updates };
     }
     res.json({ ok: true, item });
   } catch (err) {

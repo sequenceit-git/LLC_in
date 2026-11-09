@@ -29,14 +29,14 @@ export default function PolicyPage({ slug: propSlug }) {
   }, [slug]);
 
   const title = policy?.title || fallback?.title || 'Policy';
-  const meta = policy?.meta || fallback?.meta || 'Last updated: May 2026 · LLC Publication Online';
+  const meta = policy?.meta || fallback?.meta || 'Last updated: May 2026 · LLC Publications';
   const contentHtml = policy?.contentHtml || fallback?.contentHtml || '';
 
   return (
     <>
       <SEO
         title={title}
-        description={`${title} for LLC Publications Online — Section 206 New York legal compliance and publishing service.`}
+        description={`${title} for LLC Publications — Section 206 New York legal compliance and publishing service.`}
         canonical={slug.startsWith('policy/') ? `/${slug}` : `/${slug}`}
       />
       <Header />

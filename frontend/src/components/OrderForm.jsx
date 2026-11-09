@@ -263,8 +263,8 @@ export default function OrderForm({
         </div>
         <div className="form-fine">
           {lang === 'es'
-            ? 'Al enviar este formulario, usted autoriza a LLC Publication Online a coordinar los avisos impresos y radicar su Certificado de Publicación ante el Departamento de Estado de NY. Cancelación completa disponible antes de la primera publicación.'
-            : 'By submitting, you authorize LLC Publication Online to arrange designated print notices and file your Certificate of Publication with the NY Department of State. Full cancellation available prior to initial press run.'}
+            ? 'Al enviar este formulario, usted autoriza a LLC Publications a coordinar los avisos impresos y radicar su Certificado de Publicación ante el Departamento de Estado de NY. Cancelación completa disponible antes de la primera publicación.'
+            : 'By submitting, you authorize LLC Publications to arrange designated print notices and file your Certificate of Publication with the NY Department of State. Full cancellation available prior to initial press run.'}
         </div>
         {status.msg && (
           <div className={`form-status ${status.type}`} id="formStatus" role="status" aria-live="polite">

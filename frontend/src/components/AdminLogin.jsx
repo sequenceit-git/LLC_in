@@ -31,7 +31,7 @@ export default function AdminLogin({ onSuccess }) {
     <div className="admin-login-screen">
       <div className="admin-login-card">
         <div className="admin-login-header">
-          <img src="/logo.png" alt="LLC Publication Online" className="admin-login-logo" />
+          <img src="/logo.png" alt="LLC Publications" className="admin-login-logo" />
           <h2 className="admin-login-title">Admin Console</h2>
           <p className="admin-login-desc">Sign in to manage county tariffs, orders, and publications.</p>
         </div>

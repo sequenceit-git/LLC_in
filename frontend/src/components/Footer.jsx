@@ -12,8 +12,8 @@ export default function Footer() {
         <div className="footer-grid">
           <div className="footer-brand">
             <div className="footer-brand-row">
-              <img src="/logo.png" alt="LLC Publication Online" className="footer-logo-img" />
-              <div className="footer-name">LLC Publication</div>
+              <img src="/logo.png" alt="LLC Publications" className="footer-logo-img" />
+              <div className="footer-name">LLC Publications</div>
             </div>
             <p>
               {t('footer', 'desc')}
@@ -28,7 +28,7 @@ export default function Footer() {
             <a href="/#pricing">{t('nav', 'pricing')}</a>
             <a href="/#faq">{t('nav', 'faq')}</a>
             <Link to="/resources">{t('nav', 'resources')}</Link>
-            <a href={contact.portalUrl || 'https://portal.llcpublicationonline.com/'} target="_blank" rel="noopener noreferrer">
+            <a href={contact.portalUrl || 'https://portal.llcpublications.com/'} target="_blank" rel="noopener noreferrer">
               {t('footer', 'trackOrder')}
             </a>
           </div>
@@ -52,7 +52,7 @@ export default function Footer() {
           {t('footer', 'disclaimer')}
         </div>
         <div className="footer-bottom">
-          <div>© {new Date().getFullYear()} {contact.legalName || 'LLC Publication Online'}. {t('footer', 'rights')}</div>
+          <div>© {new Date().getFullYear()} {contact.legalName || 'LLC Publications'}. {t('footer', 'rights')}</div>
         </div>
       </div>
     </footer>

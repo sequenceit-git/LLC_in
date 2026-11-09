@@ -250,7 +250,7 @@ export default function HomePage() {
           <div className="testimonial-grid">
             <figure className="testimonial">
               <div className="testimonial-stars">★★★★★</div>
-              <blockquote>&ldquo;Our corporate attorney quoted over $1,500 for New York County publishing. LLC Publication Online initiated the press schedule within 48 hours and had our Certificate on file with Albany in six weeks. Entirely turnkey.&rdquo;</blockquote>
+              <blockquote>&ldquo;Our corporate attorney quoted over $1,500 for New York County publishing. LLC Publications initiated the press schedule within 48 hours and had our Certificate on file with Albany in six weeks. Entirely turnkey.&rdquo;</blockquote>
               <figcaption><strong>Elena R.</strong><span>Tech Advisory LLC, Manhattan</span></figcaption>
             </figure>
             <figure className="testimonial">
